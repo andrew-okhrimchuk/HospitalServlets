@@ -1,0 +1,8 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Datasource local storage ignored files
+/../../../../../../../../../../../:\Stajirovka\EPAM\CoffeeMachine3\CoffeeMachine3\CoffeeMachine\src\main\webapp\WEB-INF\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
