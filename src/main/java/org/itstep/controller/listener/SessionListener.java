@@ -5,7 +5,7 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.HashSet;
 
-
+@WebListener
 public class SessionListener implements HttpSessionListener {
     @Override
     public void sessionCreated(HttpSessionEvent httpSessionEvent) {

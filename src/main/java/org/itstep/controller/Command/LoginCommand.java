@@ -9,7 +9,7 @@ public class LoginCommand implements Command{
 
     @Override
     public String execute(HttpServletRequest request) {
-        System.out.println("LoginCommand execute старт ");
+      /*  System.out.println("LoginCommand execute старт ");
         User.ROLE role = (User.ROLE) request.getSession().getAttribute("role");
         System.out.println(" request.getSession().getAttribute(\"role\") = " + role);
         String roleName = role.name().toLowerCase();
@@ -25,7 +25,8 @@ public class LoginCommand implements Command{
             System.out.println(" else ");
 
             return "/login.jsp";
-        }
+        }*/
+        return null;
     }
     private String getPath(HttpServletRequest req) {
         String path = req.getRequestURI();

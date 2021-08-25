@@ -22,11 +22,11 @@ public class AuthorizationFilter implements Filter {
         final HttpServletRequest req = (HttpServletRequest) request;
         final HttpServletResponse res = (HttpServletResponse) response;
 
-        if (!getPath(req).equals("login") && checkAuthorization(req)) {
+       /* if (!getPath(req).equals("login") && checkAuthorization(req)) {
             req.getRequestDispatcher("/WEB-INF/error.jsp").forward(req, res);
             System.out.println("checkAuthorization false");
             return;
-        }
+        }*/
 
         filterChain.doFilter(request, response);
     }
@@ -36,11 +36,11 @@ public class AuthorizationFilter implements Filter {
         return path.replaceAll(".*/coffee/", "");
     }
 
-    private boolean checkAuthorization(HttpServletRequest req) {
+   /* private boolean checkAuthorization(HttpServletRequest req) {
         String path = getPath(req);
         User.ROLE role = (User.ROLE) req.getSession().getAttribute("role");
         return !path.equals(role.name().toLowerCase());
-    }
+    }*/
 
     @Override
     public void destroy() {

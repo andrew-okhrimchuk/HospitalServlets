@@ -1,18 +1,13 @@
 package org.itstep.controller.filters;
 
-import org.itstep.controller.Command.CommandUtility;
-import org.itstep.controller.dao.UserDAO;
-import org.itstep.model.entity.User;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
 
-import static java.util.Objects.nonNull;
-
+@WebFilter
 public class AuthenticationFilter implements Filter {
 
     @Override
@@ -30,7 +25,7 @@ public class AuthenticationFilter implements Filter {
         final String name = req.getParameter("name");
         final String password = req.getParameter("pass");
 
-        @SuppressWarnings("unchecked") final AtomicReference<UserDAO> dao = (AtomicReference<UserDAO>) req.getServletContext().getAttribute("dao");
+       /* @SuppressWarnings("unchecked") final AtomicReference<UserDAO> dao = (AtomicReference<UserDAO>) req.getServletContext().getAttribute("dao");
 
         HttpSession session = req.getSession();
         ServletContext context = request.getServletContext();
@@ -55,7 +50,7 @@ public class AuthenticationFilter implements Filter {
             //New user.
         } else if (dao.get().userIsExist(name, password)) {
             System.out.println("New session");
-            final User.ROLE role = dao.get().getRoleByLoginPassword(name, password);
+            final Role role = dao.get().getRoleByLoginPassword(name, password);
             System.out.println("role = " + role);
             req.getSession().setAttribute("pass", password);
             req.getSession().setAttribute("name", name);
@@ -71,7 +66,7 @@ public class AuthenticationFilter implements Filter {
             System.out.println("Login and pass not exist.");
             req.getRequestDispatcher("/login.jsp").forward(req, res);
             return;
-        }
+        }*/
 
         filterChain.doFilter(request, response);
     }
