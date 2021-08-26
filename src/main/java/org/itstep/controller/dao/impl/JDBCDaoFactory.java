@@ -7,6 +7,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class JDBCDaoFactory extends DaoFactory {
+
+    static {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("PostgreSQL DataSource unable to load PostgreSQL JDBC Driver");
+        }
+    }
   /*  @Override
     public DoctorDao createDoctorDao() {
         return new JDBCDoctorDao(getConnection());

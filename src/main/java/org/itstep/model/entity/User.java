@@ -1,13 +1,12 @@
 package org.itstep.model.entity;
 
-import javax.management.relation.Role;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.itstep.model.entity.enums.Role;
 
 public class User  {
     private Long id;
     private String username;
-    private List<Role> authorities = new ArrayList<>();
+    private Role role;
     private String password;
 
     public Long getId() {
@@ -26,12 +25,12 @@ public class User  {
         this.username = username;
     }
 
-    public List<Role> getAuthorities() {
-        return authorities;
+    public Role getRole() {
+        return role;
     }
 
-    public void setAuthorities(List<Role> authorities) {
-        this.authorities = authorities;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getPassword() {

@@ -1,6 +1,7 @@
 package org.itstep.controller.dao.impl;
 
 import org.itstep.model.entity.User;
+import org.itstep.model.entity.enums.Role;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,14 +20,14 @@ public class UtilityDao {
         return result;
     }*/
 
-    static User extractFromResultSetP(ResultSet rs)
+    static User extractFromResultSetUser(ResultSet rs)
             throws SQLException {
         User result = new User();
 
-        result.setId(rs.getLong("idpatient") );
-//        result.setName( rs.getString("patient.name") );
- //       result.setAddress( rs.getString("address"));
-
+        result.setId(rs.getLong("id") );
+        result.setUsername(rs.getString("username"));
+        result.setPassword(rs.getString("password"));
+        result.setRole(Role.valueOf(rs.getString("authorities").trim().toUpperCase()));
         return result;
     }
 

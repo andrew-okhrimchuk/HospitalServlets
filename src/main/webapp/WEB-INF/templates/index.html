@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta  charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <div align="right" style="margin-right:300px">
+
+       <!-- <a href="/login" th:text="#{log}"></a>-->
+        <a th:if="${!logged}" href="/login" th:text="${login.getString('log')}"></a>
+        <a th:if="${logged}" href="/logout" th:text="${login.getString('logout')}"></a>
+        <a href="/?lang=ru" th:text="${login.getString('ru')}"></a>
+        <a href="/?lang=en" th:text="${login.getString('en')}"></a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default" style="margin-top:45px">
+                <div class="panel-heading">
+                    <h1 th:text="${login.getString('hi')} +' '+ ${login.getString('guest')}"></h1>
+                    <h2 th:text="${login.getString('welcome')}"></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS USERS
     id              SERIAL PRIMARY KEY,
     username        VARCHAR(255) NOT NULL unique ,
     password        VARCHAR(255) NOT NULL,
-    authorities     integer,
-    FOREIGN KEY (authorities) REFERENCES USER_ROLE (user_id) ON UPDATE CASCADE ON DELETE CASCADE
+    authorities_id     integer,
+    FOREIGN KEY (authorities_id) REFERENCES USER_ROLE (user_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
@@ -57,7 +57,7 @@ VALUES (1, 'Patient'),
        (9, 'Patient'),
        (10, 'Patient');
 
-INSERT INTO USERS (id, username, password, authorities)
+INSERT INTO USERS (id, username, password, authorities_id)
 VALUES (1, 'Jon Dou', '$2a$10$ImeH8oWiZpV/cBDXL14ILO8QLWL5Qf1qDmrey8lC1UfMgL9MFv06K', 1),
        (2, 'Amanta Smit', 1, 2),
        (3, 'May Smit', 1, 3),
