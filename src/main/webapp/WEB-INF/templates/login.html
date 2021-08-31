@@ -11,7 +11,9 @@
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 </head>
 
-
+<!--
+/*PAGE login.html*/
+-->
 <body >
 <div class="container">
 
@@ -36,7 +38,6 @@
                     <div th:if="${error}">
                         <div class="alert alert-danger" role="alert" th:text="${login.getString('Invalid')}"></div>
                     </div>
-
 
                     <form method="post">
                         <div class="form-group">

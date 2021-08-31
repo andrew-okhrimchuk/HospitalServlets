@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${add} ? 'Create a Doctor' : 'Edit a Doctor'"></title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+</head>
+<body>
+<div style="text-align: center;">
+    <button type="button" class="btn btn-light"><a th:text="${login.getString('onMain')}" th:href="@{/}" }></a></button>
+    <button type="button" class="btn btn-light"><a th:text="${login.getString('listPatients')}"
+                                                   th:href="@{/admin/patients}" }></a></button>
+    <button type="button" class="btn btn-light"><a href="/logout" th:text="${login.getString('logout')}"></a></button>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default" style="margin-top:45px">
+                <div class="panel-heading">
+                    <h3 class="panel-title" th:text="${add} ? ${login.getString('addDoctor')} : ${login.getString('update')}"></h3>
+                </div>
+                <div class="panel-body">
+                    <form th:action="@{/admin/doctors/add}" method="POST">
+
+                        <table class="table" border="0">
+                            <tr>
+                                <td th:text="${login.getString('Username')}"></td>
+                                <td>:</td>
+                                <td><input type="text" th:field="*{user.username}" th:name="Username"/></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${login.getString('Password')}"></td>
+                                <td>:</td>
+                                <td><input th:field="*{user.password}" th:name="Password"/></td>
+                            </tr>
+                            <tr>
+                                <td>Select a speciality</td>
+                                <td>:</td>
+                                <td>
+                                    <label>
+                                        <select th:field="*{SelectDTO.specialities}" th:name="special">
+                                        <option th:each="special : ${SelectDTO.specialities}"
+                                                th:selected="(${special} == *{SelectDTO.specialities})"
+                                                th:value="${special}"
+                                                th:text="${special}">
+                                        </option>
+                                        </select>
+                                    </label>
+                                </td>
+                            </tr>
+
+                        </table>
+                        <input type="submit" class="btn btn-success"
+                               th:value="${add} ? ${login.getString('create')} : ${login.getString('update')}"/>
+                        <button type="button" class="btn btn-light"><a th:text="${login.getString('cancel')}"
+                                                                       th:href="@{/admin/doctors}" }></a></button>
+                    </form>
+
+                    <br/>
+                    <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script th:inline="javascript">
+    let form = document.forms[0];
+    if (![[${add}]]) {
+        var url = '/admin/doctors/edit'
+        form.setAttribute('action', url);
+    }
+    console.log(form.getAttribute('action'));
+</script>
+</html>

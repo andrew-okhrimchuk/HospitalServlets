@@ -1,8 +1,7 @@
 package org.itstep.controller.filters;
 
-import org.itstep.controller.dao.DaoFactory;
-import org.itstep.controller.dao.UserDao;
-import org.itstep.model.entity.User;
+import org.itstep.dao.DaoFactory;
+import org.itstep.dao.UserDao;
 import org.itstep.model.entity.enums.Role;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -22,62 +21,52 @@ import static java.util.Objects.nonNull;
 public class AuthenticationFilter implements Filter {
     Logger log = Logger.getLogger(AuthenticationFilter.class.getName());
     private static final Set<String> ALLOWED_PATHS = Collections.unmodifiableSet(new HashSet<>(
-            Arrays.asList("", "/login", "/logout", "/register")));
+            Arrays.asList("", "/login", "/logout", "/register", "/favicon.ico")));
 
     @Override
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain filterChain) throws IOException, ServletException {
-        log.info("Start filter3" );
+        log.info("Start filter2" );
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         String username = req.getParameter("username");
-        String pass = req.getParameter("password");
 
         String path = getPath(req);
+        log.info("current path = " + path);
         boolean allowedPath = ALLOWED_PATHS.contains(path);
 
         HttpSession session = req.getSession();
         DaoFactory factory = DaoFactory.getInstance();
         UserDao dao = factory.createUserDao();
 
+        log.info("findByUsername = " + dao.findByUsername(username).isPresent());
+        log.info("username = " + username);
+        log.info("password = " + req.getParameter("password"));
+
         if (allowedPath) {
-            log.info("allowedPath" +  path);
+            log.info("allowedPath " +  path);
+
+            if (isUserInSession(session) && !path.equalsIgnoreCase("/favicon.ico")) {
+                clearSession(session);
+            }
             filterChain.doFilter(req, res);
             return;
         }
-        else if (nonNull(session) &&
-                nonNull(session.getAttribute("username")) &&
-                nonNull(session.getAttribute("password"))) {
+        else if (isUserInSession(session)) {
             log.info("Session is exist");
-            if (checkRule(session.getAttribute("role").toString(), path)) {
+            String role = session.getAttribute("role").toString();
+
+            if (checkRule(role, path)) {
                 log.info("checkRule" +  path);
                 filterChain.doFilter(req, res);
                 return;
             }
         }
-        else if (dao.findByUsername(username).isPresent()) {
-            final User user = dao.findByUsername(username).get();
-            log.info("role = " + user.getRole());
-            if (pass.equals(user.getPassword()) && checkRule(user.getRole().toString(), path)) {
-                req.getSession().setAttribute("username", pass);
-                req.getSession().setAttribute("password", username);
-                req.getSession().setAttribute("role", user.getRole());
-                ServletContext context = request.getServletContext();
-                context.setAttribute("userName", username);
-                filterChain.doFilter(req, res);
-                return;
-            }
-//TODO !!!! выгрузить из контекста !!!
-            /*if (CommandUtility.checkUserIsLogged(req, name)) {
-                req.getRequestDispatcher("/error.jsp").forward(req, res);
-                return;
-            }*/
-            //Enemy user.
-        }
         log.info("Login and pass not exist.");
         res.sendRedirect("/login");
     }
+
 
     @Override
     public void destroy() {
@@ -106,5 +95,34 @@ public class AuthenticationFilter implements Filter {
             return Role.NURSE.toString();
         }
         return path;
+    }
+
+    private boolean isUserInSession(HttpSession session) {
+        return nonNull(session) &&
+                nonNull(session.getAttribute("username"));
+    }
+
+    private void clearSession(HttpSession session){
+        String username = (String) session.getAttribute("username");
+        session.removeAttribute("username");
+
+        HashSet<String> loggedUsers = (HashSet<String>) session.getServletContext()
+                .getAttribute("loggedUsers");
+        if (!loggedUsers.isEmpty()) {
+            loggedUsers.remove(username);
+        }
+    }
+
+    static boolean checkUserIsLogged(HttpServletRequest request, String userName){
+        HashSet<String> loggedUsers = (HashSet<String>) request.getSession().getServletContext()
+                .getAttribute("loggedUsers");
+
+        if(loggedUsers.stream().anyMatch(userName::equals)){
+            return true;
+        }
+        loggedUsers.add(userName);
+        request.getSession().getServletContext()
+                .setAttribute("loggedUsers", loggedUsers);
+        return false;
     }
 }

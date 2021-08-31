@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <title th:text="${login.getString('listPatients')}"></title>
+
+</head>
+<body>
+<div style="text-align: center;">
+    <button type="button" class="btn btn-light"><a th:text="${login.getString('onMain')}" th:href="@{/}" }></a></button>
+    <button type="button" class="btn btn-light"><a th:text="${login.getString('listPatients')}"
+                                                   th:href="@{/admin/patients}" }></a></button>
+    <button type="button" class="btn btn-light"><a href="/logout" th:text="${login.getString('logout')}"></a></button>
+</div>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default" style="margin-top:45px">
+            <div class="panel-heading">
+                <h3 class="panel-title" th:text="${login.getString('listDoctors')}"></h3>
+            </div>
+            <div class="panel-body">
+                <form action="/admin/doctors" method="get" id="form">
+                    <div><b>
+                        <input type="submit" th:value="${login.getString('listRefresh')}" name="submit" style="float:left">
+
+                        <select th:field="*{SelectDTO.specialities}" style="float:right" th:name="special">
+                        <option th:each="special : ${SelectDTO.specialities}"
+                                th:selected="(${special} == *{SelectDTO.specialities})"
+                                th:value="${special}"
+                                th:text="${special}">
+                        </option>
+                        </select>
+
+                    </b></div>
+                    <table class="table" border="1">
+                        <thead>
+                        <tr>
+                            <th width="8%">#</th>
+                            <th width="8%" th:text="${login.getString('FIO')}"></th>
+                            <th width="8%" th:text="${login.getString('speciality')}"></th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="user, iter : ${SelectDTO.doctors}"
+                            th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'">
+                            <td th:text="${iter.count}"></td>
+                            <td th:text="${user.username}"></td>
+                            <td th:text="${user.speciality}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div th:if="${SelectDTO.page.totalPages > 0}" class="pagination"
+                         th:each="pageNumber : ${pageNumbers}">
+                        <a th:href="@{/admin/patients(size=${SelectDTO.page.size}, page1=${pageNumber})}"
+                           th:text=${pageNumber}
+                           th:class="${pageNumber==SelectDTO.page.number + 1} ? active"></a>
+                    </div>
+                </form>
+            </div>
+            <button type="button" class="btn btn-light">
+                <a th:text="${login.getString('addDoctor')}" th:href="@{/admin/doctors/add}" }>
+                </a>
+            </button>
+
+            <script type="text/javascript">
+                function chekValues() {
+
+                    return true;
+                }
+
+                function setEXEL() {
+                    console.log("start setEXEL")
+                    var action = document.getElementById("form");
+                    action.setAttribute("action", "/download/calls.xlsx")
+                    console.log("start setEXEL", document.getElementById("form"));
+
+                    //  return chekValues();
+                }
+
+                function setDefoult() {
+                    console.log("start setDefoult")
+                    var action = document.getElementById("form");
+                    console.log("start setDefoult", document.getElementById("form"));
+                    action.setAttribute("action", "/admin/doctors")
+                    console.log(document.getElementById("form"))
+                    return chekValues();
+                }
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

@@ -1,7 +1,6 @@
 package org.itstep.controller;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.servlet.annotation.WebServlet;
@@ -11,9 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.itstep.config.TemplateEngineUtil;
-import org.itstep.controller.dao.DaoFactory;
-import org.itstep.controller.dao.UserDao;
-import org.itstep.model.entity.User;
+import org.itstep.dao.DaoFactory;
+import org.itstep.dao.UserDao;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 

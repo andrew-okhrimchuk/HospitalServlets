@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${add} ? 'Create a Patient' : 'Edit a Patient'"></title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+</head>
+<body>
+<div style="text-align: center;">
+    <button type="button" class="btn btn-light"><a th:text="${login.getString('onMain')}" th:href="@{/}" }></a></button>
+    <button type="button" class="btn btn-light"><a th:text="${login.getString('listDoctors')}"></a>
+    <button type="button" class="btn btn-light"><a href="/logout" th:text="${login.getString('logout')}"></a></button>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default" style="margin-top:45px">
+                <div class="panel-heading">
+                    <h3 class="panel-title" th:text="${add} ? 'Create a Patient:' : 'Edit a Patient:'"></h3>
+                </div>
+                <div class="panel-body">
+                    <form th:action="@{/admin/patients/add}"  method="POST">
+
+                        <table class="table" border="0">
+                            <tr>
+                                <td th:text="${login.getString('Username')}"></td>
+                                <td>:</td>
+                                <td><input type="text" th:field="*{username}" name="Username"/></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${login.getString('dateOfBirth')}"></td>
+                                <td>:</td>
+                                <td><input type="date" th:field="*{birthDate}" name="dateOfBirth"/></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${login.getString('Password')}"></td>
+                                <td>:</td>
+                                <td><input th:type='text' th:field="*{password}" name="Password" /></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${login.getString('isActualPatient')}"></td>
+                                <td></td>
+                                <td><input type="checkbox" th:checked="*{{isIscurrentpatient}} ? 'checked'"
+                                           class="custom-control-input" id="isIscurrentpatient" name="isIscurrentpatient"
+                                           th:field="*{isIscurrentpatient}">
+                                    <label for="isIscurrentpatient" class="custom-control-label"
+                                           th:field="*{{isIscurrentpatient}}"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Select a doctor</td>
+                                <td>:</td>
+                                <td>
+                                    <label>
+                                        <select th:field="*{doctorDTO}" th:name="doctor">
+                                        <option th:each="doctor : ${doctorDTO}"
+                                                th:selected="(${doctor} == *{doctorDTO})"
+                                                th:value="${doctor.id}"
+                                                th:text="${doctor.username + ', Count Of Patients - ' + doctor.countOfPatients }"
+                                                >
+                                        </option>
+                                        </select>
+                                    </label>
+                                </td>
+                            </tr>
+
+                        </table>
+                        <input type="submit" class="btn btn-success" th:value="${add} ? ${login.getString('create')} : ${login.getString('update')}"/>
+                        <button type="button" class="btn btn-light">
+                            <a th:text="${login.getString('cancel')}" th:href="@{/admin/patients}"
+                               }>
+                            </a>
+                        </button>
+                    </form>
+
+                    <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script th:inline="javascript">
+    let form = document.forms[0];
+    if (![[${add}]]) {
+        var url = '/admin/patients/edit'
+        form.setAttribute('action', url);
+    }
+    console.log(form.getAttribute('action'));
+</script>
+</html>

@@ -1,12 +1,13 @@
-package org.itstep.controller.dao;
+package org.itstep.dao;
 
 
-import org.itstep.controller.dao.impl.JDBCDaoFactory;
+import org.itstep.dao.impl.JDBCDaoFactory;
 
 public abstract class DaoFactory {
     private static DaoFactory daoFactory;
 
-  //  public abstract DoctorDao createDoctorDao();
+    public abstract PatientDao createPatientDao();
+    public abstract DoctorDao createDoctorDao();
     public abstract UserDao createUserDao();
 
     public static DaoFactory getInstance(){

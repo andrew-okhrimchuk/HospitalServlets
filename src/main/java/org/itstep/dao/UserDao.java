@@ -1,4 +1,4 @@
-package org.itstep.controller.dao;
+package org.itstep.dao;
 
 
 import org.itstep.model.entity.User;
