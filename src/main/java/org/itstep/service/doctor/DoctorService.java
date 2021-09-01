@@ -170,6 +170,7 @@ public class DoctorService implements IDoctorService {
 
     public DoctorDTO convertToDto(Doctor doctor) {
         return DoctorDTO.newBuilder()
+                .setId(doctor.getId())
                 .setUsername(doctor.getUsername())
                 .setPassword(doctor.getPassword())
                 .setSpeciality(doctor.getSpeciality())

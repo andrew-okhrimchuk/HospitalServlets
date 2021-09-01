@@ -106,20 +106,28 @@ public class JDBCHospitalListDao implements HospitalListDao, AutoCloseable {
         log.info("Start findAll by userId, doctorName " + userId + doctorName);
 
         Optional<HospitalList> resultList =Optional.empty();
-        Map<Long, HospitalList> patients = new HashMap<>();
-        String SQL = "select * from hospitallist where h.patientid = ? and h.doctorname=? and h.datedischarge is null";
+        String SQL = "select * from hospitallist as h where h.patientid=? and h.doctorname=? and h.datedischarge is null";
 
         try (PreparedStatement ps = connection.prepareStatement(SQL)) {
             ps.setInt(1, userId);
             ps.setString(2, doctorName);
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                resultList = Optional.ofNullable(Optional.of(extractFromResultSeHospitalList(rs))
-                        .orElseThrow(() -> new NotFoundException("userId " + userId + " was not found!")));
+                resultList = Optional.of(extractFromResultSeHospitalList(rs));
+                     //   .orElseThrow(() -> new NotFoundException("userId " + userId + " was not found!"));
             }
             log.info("find HospitalList count = " + resultList.isPresent());
-
+            connection.close();
         } catch (Exception e) {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                log.info("connection.close " + throwables.getMessage());
+                throwables.printStackTrace();
+            }
+            log.info("Exception findByParientIdAndDoctorName " + e.getMessage());
+            e.printStackTrace();
             throw new DaoExeption(e.getMessage(), e);
         }
         return resultList;

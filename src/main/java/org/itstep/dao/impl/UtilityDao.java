@@ -63,7 +63,7 @@ public class UtilityDao {
         result.setPatientId(Patient.newBuilder().setId(rs.getLong("patientid")).build());
         result.setDateCreate(rs.getTimestamp("datecreate").toLocalDateTime());
         result.setDateDischarge(isThere(rs, "datedischarge") ? rs.getTimestamp("datedischarge").toLocalDateTime() : null);
-
+        log.info("result = " + result);
         return result;
     }
 
@@ -78,8 +78,8 @@ public class UtilityDao {
     {
         try
         {
-            rs.findColumn(column);
-            return true;
+            return rs.findColumn(column) > 0 && rs.getObject(column) !=null;
+
         } catch (SQLException sqlex)
         {
             log.info("column doesn't exist {}" + column);

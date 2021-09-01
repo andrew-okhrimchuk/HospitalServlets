@@ -30,6 +30,18 @@ public class HospitalListService implements IHospitalLisService {
         try {
             return dao.findByParientIdAndDoctorName(userId, userNameDoctor);
         } catch (DaoExeption e) {
+            log.info("error findByParientIdAndDoctorName " + e.getMessage());
+            throw new ServiceExeption(e.getMessage(), e);
+        }
+    }
+    @Override
+    public void save(HospitalList hospitalList) throws ServiceExeption{
+        log.info("Start save");
+        DaoFactory factory = DaoFactory.getInstance();
+        HospitalListDao dao = factory.createHospitalListDao();
+        try {
+            dao.create(hospitalList);
+        } catch (DaoExeption e) {
             log.info("findByParientIdAndDoctorName " + e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
         }

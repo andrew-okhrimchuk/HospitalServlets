@@ -7,6 +7,7 @@ import org.itstep.model.dto.DoctorDTO;
 import org.itstep.model.dto.PatientDTO;
 import org.itstep.model.dto.SelectDTO;
 import org.itstep.model.entity.HospitalList;
+import org.itstep.model.entity.Patient;
 import org.itstep.service.hospitallist.HospitalListService;
 import org.itstep.service.patient.PatientService;
 import org.thymeleaf.TemplateEngine;
@@ -18,6 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
@@ -32,24 +36,28 @@ public class HospitalListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         log.info("Start HospitalListServlet doGet ");
+        HospitalListService hospitalListService = new HospitalListService();
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(request.getServletContext());
         WebContext context = new WebContext(request, response, request.getServletContext());
         HttpSession sess = request.getSession();
         Locale locale = (Locale) sess.getAttribute("locale");
-        SelectDTO selectDTO =  SelectDTO.newBuilder().build();
+        SelectDTO selectDTO = SelectDTO.newBuilder().build();
 
-        HospitalListService hospitalListService = new HospitalListService();
+        int userId = 0;
         try {
-            int userId = Integer.parseInt(request.getParameter("id"));
-            Optional<HospitalList> lists = hospitalListService.findByParientIdAndDoctorName( userId,(String) sess.getAttribute("username"));
+            userId = Integer.parseInt(request.getParameter("id"));
+            log.info("Find my userId = " + userId);
+
+            Optional<HospitalList> lists = hospitalListService.findByParientIdAndDoctorName(userId, (String) sess.getAttribute("username"));
             log.info("Find my HospitalListService count = " + lists);
-            selectDTO.setHospitalList(lists.get());
-        } catch (ServiceExeption  e) {
+            selectDTO.setHospitalList(lists.orElseGet(HospitalList::new));
+        } catch (ServiceExeption e) {
             log.info(e.getMessage());
             context.setVariable("errorMessage", e.getMessage());
         }
 
         ResourceBundle resource = ResourceBundle.getBundle("login", locale);
+        context.setVariable("user_id", userId);
         context.setVariable("login", resource);
         context.setVariable("selectDTO", selectDTO);
         context.setVariable("locale", locale.getLanguage());
@@ -60,30 +68,17 @@ public class HospitalListServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         log.info("Start HospitalListServlet doPost");
-
         WebContext context = new WebContext(request, response, request.getServletContext());
-        DaoFactory factory = DaoFactory.getInstance();
-        PatientService patientService = new PatientService();
+        logParams(request);
+        HospitalList hospitalList = getHospitalList(request);
 
-        log.info(request.getParameter("Username"));
-        log.info(request.getParameter("dateOfBirth"));
-        log.info(request.getParameter("Password"));
-        log.info(request.getParameter("isIscurrentpatient"));
-        log.info(request.getParameter("doctor"));
-
-        PatientDTO patientDTO = PatientDTO.newBuilder()
-                .setActualPatient(request.getParameter("isIscurrentpatient").equals("on"))
-                .setBirthDate(request.getParameter("dateOfBirth"))
-                .setPassword(request.getParameter("Password"))
-                .setUsername(request.getParameter("Username"))
-                .setDoctorDTO(request.getParameter("doctor") !=null ? DoctorDTO.newBuilder().setId(Long.valueOf(request.getParameter("doctor"))).build() : null)
-                .build();
-
-        if (patientDTO.isValid()) {
+        if (hospitalList.isValid()) {
             try {
-                patientService.save(patientDTO);
+                HospitalListService hospitalListService = new HospitalListService();
+                hospitalListService.save(hospitalList);
+
                 response.setStatus(HttpServletResponse.SC_FOUND);//302
-                response.setHeader("Location", "/admin/patients");
+                response.setHeader("Location", "/doctor/hospital-list/edit?id="+ request.getParameter("user_id"));
                 context.setVariable("errorMessage", "Save OK!");
                 return;
             } catch (ServiceExeption e) {
@@ -91,7 +86,41 @@ public class HospitalListServlet extends HttpServlet {
                 e.printStackTrace();
             }
         }
-        response.sendRedirect("/admin/patients/add");
+        response.sendRedirect("/doctor/hospital-list/edit?id="+ request.getParameter("user_id"));
+    }
+
+    private HospitalList getHospitalList(HttpServletRequest request) {
+        HttpSession sess = request.getSession();
+        HospitalList hospitalList = new HospitalList();
+
+        hospitalList.setId(isThere(request, "id") ? Long.parseLong(request.getParameter("id")) : null);
+        hospitalList.setPrimaryDiagnosis(isThere(request, "primaryDiagnosis") ? request.getParameter("primaryDiagnosis") : null);
+        hospitalList.setFinalDiagnosis(isThere(request, "finalDiagnosis") ? request.getParameter("finalDiagnosis") : null);
+        hospitalList.setMedicine(isThere(request, "medicine") ? request.getParameter("medicine") : null);
+        hospitalList.setOperations(isThere(request, "operations") ? request.getParameter("operations") : null);
+        hospitalList.setDoctorName((String) sess.getAttribute("username"));
+        hospitalList.setPatientId(isThere(request, "user_id") ?
+                Patient.newBuilder()
+                        .setId(Long.parseLong(request.getParameter("user_id")))
+                        .build()
+                : null);
+        if (hospitalList.getId() == null) {
+            hospitalList.setDateCreate(LocalDateTime.now());
+        }
+        return hospitalList;
+    }
+
+    private void logParams(HttpServletRequest request) {
+        log.info(request.getParameter("id"));
+        log.info(request.getParameter("primaryDiagnosis"));
+        log.info(request.getParameter("finalDiagnosis"));
+        log.info(request.getParameter("medicine"));
+        log.info(request.getParameter("operations"));
+        log.info(request.getParameter("user_id"));
+    }
+
+    private boolean isThere(HttpServletRequest request, String param) {
+        return request.getParameter(param) != null && !request.getParameter(param).equals("");
     }
 
 }

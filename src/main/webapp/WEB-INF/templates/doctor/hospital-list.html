@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Latest compiled and minified CSS -->
@@ -28,41 +29,46 @@
                 </div>
                 <div class="panel-body">
 
-                    <form th:action="@{/doctor/hospital-list/edit/{path}(path=${user_id})}" "
+                    <form th:action="@{/doctor/hospital-list/edit}"
                           method="POST">
 
                         <table class="table" border="0">
                             <tr style="display:none;">
                                 <td></td>
                                 <td></td>
-                                <td><input type="hidden" th:field="*{selectDTO.getHospitalListList().getId()}"/></td>
+                                <td><input type="hidden" th:value="*{user_id}" name="user_id"/></td>
                             </tr>
                             <tr style="display:none;">
                                 <td></td>
                                 <td></td>
-                                <td><input type="hidden" th:field="*{dateCreate}"/></td>
+                                <td><input type="hidden" th:value="*{selectDTO.hospitalList.id}" name="id"/></td>
+                            </tr>
+                            <tr style="display:none;">
+                                <td></td>
+                                <td></td>
+                                <td><input type="hidden" th:value="*{selectDTO.hospitalList.dateCreate}" name="dateCreate"/></td>
                             </tr>
                             <tr>
                                 <td th:text="${login.getString('primaryDiagnosis')}"></td>
                                 <td>:</td>
-                                <td><input type="text" th:field="*{primaryDiagnosis}"/></td>
+                                <td><input type="text" th:value="*{selectDTO.hospitalList.primaryDiagnosis}" name="primaryDiagnosis"/></td>
 
                             </tr>
                             <tr style="display:none;">
                                 <td></td>
                                 <td></td>
-                                <td><input type="hidden" th:field="*{finalDiagnosis}"/></td>
+                                <td><input type="hidden" th:value="*{selectDTO.hospitalList.finalDiagnosis}" name="finalDiagnosis"/></td>
                             </tr>
                             <tr>
                                 <td th:text="${login.getString('medicine')}"></td>
                                 <td>:</td>
-                                <td><input type="text" th:field="*{medicine}"/></td>
+                                <td><input type="text" th:value="*{selectDTO.hospitalList.medicine}" name="medicine"/></td>
 
                             </tr>
                             <tr>
                                 <td th:text="${login.getString('operations')}"></td>
                                 <td>:</td>
-                                <td><input type="text" th:field="*{operations}"/></td>
+                                <td><input type="text" th:value="*{selectDTO.hospitalList.operations}" name="operations"/></td>
 
                             </tr>
                         </table>
@@ -75,11 +81,11 @@
                     </form>
                     <button type="button" class="btn btn-light"><a
                             th:text="${login.getString('appointNurse')}"
-                            th:href="@{/doctor/{path}(path=${hospitalList.hospitalListId == null ? 'hospital-list/edit/'+ user_id :  'nurse/' +hospitalList.hospitalListId + '/' + user_id })}"
+                            th:href="@{/doctor/{path}(path=${selectDTO.hospitalList.id == null ? 'hospital-list/edit/'+ user_id :  'nurse/' +selectDTO.hospitalList.id + '/' + user_id })}"
                     </a></button>
                     <button type="button" class="btn btn-light">
                         <a
-                                th:onclick="'javascript:rowClicked(\'' + ${hospitalList.hospitalListId} + '\');'"
+                                th:onclick="'javascript:rowClicked(\'' + ${selectDTO.hospitalList.id} + '\');'"
                                 th:text="${login.getString('medicationLog')}" }>
                         </a>
                     </button>
@@ -113,6 +119,17 @@
             }
         }
         function rowClickedDischarge(value) {
+            if (isEmpty(value)) {
+                console.log("isEmpty 2 " + value)
+                console.log("[[${user_id}]] = " + [[${user_id}]])
+                location.href = "/doctor/hospital-list/edit/" + [[${user_id}]];
+            }
+            if (!isEmpty(value)) {
+                console.log("not isEmpty 3" + value)
+                location.href = "/doctor/discharge/" + value;
+            }
+        }
+        function rowClickedNurse(value) {
             if (isEmpty(value)) {
                 console.log("isEmpty 2 " + value)
                 console.log("[[${user_id}]] = " + [[${user_id}]])

@@ -64,10 +64,10 @@
                                 <td>:</td>
                                 <td>
                                     <label>
-                                        <select th:field="*{doctorDTO}" th:name="doctor">
+                                        <select th:field="*{doctorDTO}" th:name="doctor_id">
                                         <option th:each="doctor : ${doctorDTO}"
                                                 th:selected="(${doctor} == *{doctorDTO})"
-                                                th:value="${{doctor.getId()}}"
+                                                th:value="${{doctor.id}}"
                                                 th:text="${doctor.username + ', Count Of Patients - ' + doctor.countOfPatients }"
                                                 >
                                         </option>
@@ -84,7 +84,6 @@
                             </a>
                         </button>
                     </form>
-
                     <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
                 </div>
             </div>

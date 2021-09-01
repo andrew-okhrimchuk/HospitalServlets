@@ -111,5 +111,11 @@ public class HospitalList {
                 ", hospitallistid=" + hospitallistid +
                 '}';
     }
-
+    public boolean isValid() {
+        return primaryDiagnosis != null && !primaryDiagnosis.isEmpty() &&
+                medicine != null && !medicine.isEmpty() &&
+                operations != null && !operations.isEmpty() &&
+                dateCreate != null && patientId != null &&
+                doctorName != null && !doctorName.isEmpty();
+    }
 }

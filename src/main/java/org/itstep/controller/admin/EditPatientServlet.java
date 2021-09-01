@@ -93,7 +93,7 @@ public class EditPatientServlet extends HttpServlet {
         log.info(request.getParameter("dateOfBirth"));
         log.info(request.getParameter("Password"));
         log.info(request.getParameter("isIscurrentpatient"));
-        log.info(request.getParameter("doctor"));
+        log.info(request.getParameter("doctor_id"));
 
         PatientDTO patientDTO = PatientDTO.newBuilder()
                 .setId(request.getParameter("id"))
@@ -101,7 +101,7 @@ public class EditPatientServlet extends HttpServlet {
                 .setBirthDate(request.getParameter("dateOfBirth"))
                 .setPassword(request.getParameter("Password"))
                 .setUsername(request.getParameter("Username"))
-                .setDoctorDTO(request.getParameter("doctor") !=null ? DoctorDTO.newBuilder().setId(Long.valueOf(request.getParameter("doctor"))).build() : null)
+                .setDoctorDTO(request.getParameter("doctor_id") !=null ? DoctorDTO.newBuilder().setId(Long.valueOf(request.getParameter("doctor_id"))).build() : null)
                 .build();
 
         if (patientDTO.isValid()) {
