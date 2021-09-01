@@ -2,6 +2,7 @@ package org.itstep.model.dto;
 
 
 import org.itstep.model.entity.Doctor;
+import org.itstep.model.entity.HospitalList;
 import org.itstep.model.entity.Patient;
 import org.itstep.model.entity.enums.Role;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class SelectDTO {
     private List<Patient> patient = new ArrayList<>();
     private List<DoctorDTO> doctors = new ArrayList<>();
     private List<String> specialities;
+    private HospitalList hospitalList;
     private String speciality;
     private int currentPage;
     private int pageSize;
@@ -98,6 +100,14 @@ public class SelectDTO {
 
     public void setDoctors(List<DoctorDTO> doctors) {
         this.doctors = doctors;
+    }
+
+    public HospitalList getHospitalList() {
+        return hospitalList;
+    }
+
+    public void setHospitalList(HospitalList hospitalList) {
+        this.hospitalList = hospitalList;
     }
 
     public static Builder newBuilder() {

@@ -9,6 +9,7 @@ public abstract class DaoFactory {
     public abstract PatientDao createPatientDao();
     public abstract DoctorDao createDoctorDao();
     public abstract UserDao createUserDao();
+    public abstract HospitalListDao createHospitalListDao();
 
     public static DaoFactory getInstance(){
         if( daoFactory == null ){

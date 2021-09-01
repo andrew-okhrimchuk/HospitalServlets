@@ -1,9 +1,6 @@
 package org.itstep.dao.impl;
 
-import org.itstep.dao.DaoFactory;
-import org.itstep.dao.DoctorDao;
-import org.itstep.dao.PatientDao;
-import org.itstep.dao.UserDao;
+import org.itstep.dao.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -38,6 +35,10 @@ public class JDBCDaoFactory extends DaoFactory {
         JDBCUserDao dao = new JDBCUserDao(getConnection());
         dao.init();
         return dao;
+    }
+    @Override
+    public HospitalListDao createHospitalListDao() {
+        return new JDBCHospitalListDao(getConnection());
     }
 
     private Connection getConnection() {

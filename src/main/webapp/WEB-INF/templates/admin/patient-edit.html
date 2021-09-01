@@ -42,12 +42,12 @@
                             <tr>
                                 <td th:text="${login.getString('dateOfBirth')}"></td>
                                 <td>:</td>
-                                <td><input type="date" th:value="*{user.birthDate}" name="dateOfBirth"/></td>
+                                <td><input type="date" th:value="*{{user.birthDate}}" name="dateOfBirth"/></td>
                             </tr>
                             <tr>
                                 <td th:text="${login.getString('Password')}"></td>
                                 <td>:</td>
-                                <td><input th:type='text' th:value="*{password}" name="Password" /></td>
+                                <td><input th:type='text' th:value="*{{password}}" name="Password" /></td>
                             </tr>
                             <tr>
                                 <td th:text="${login.getString('isActualPatient')}"></td>
@@ -66,8 +66,8 @@
                                     <label>
                                         <select th:field="*{doctorDTO}" th:name="doctor">
                                         <option th:each="doctor : ${doctorDTO}"
-                                                th:selected="(${doctor} == ${{doctorDTO}})"
-                                                th:value="${doctor.id}"
+                                                th:selected="(${doctor} == *{doctorDTO})"
+                                                th:value="${{doctor.getId()}}"
                                                 th:text="${doctor.username + ', Count Of Patients - ' + doctor.countOfPatients }"
                                                 >
                                         </option>

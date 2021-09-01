@@ -1,6 +1,7 @@
 package org.itstep.dao.impl;
 
 import org.itstep.model.entity.Doctor;
+import org.itstep.model.entity.HospitalList;
 import org.itstep.model.entity.Patient;
 import org.itstep.model.entity.User;
 import org.itstep.model.entity.enums.Role;
@@ -46,7 +47,23 @@ public class UtilityDao {
         result.setid(rs.getLong("id"));
         result.setusername(rs.getString("username"));
         result.setCountOfPatients(String.valueOf(rs.getInt(4)));
-//        result.setRole(Role.valueOf(rs.getString("authorities_id").trim().toUpperCase()));
+        return result;
+    }
+
+    static HospitalList extractFromResultSeHospitalList(ResultSet rs)
+            throws SQLException {
+
+        HospitalList result = new HospitalList();
+        result.setId(rs.getLong("id"));
+        result.setPrimaryDiagnosis(rs.getString("primarydiagnosis"));
+        result.setFinalDiagnosis(isThere(rs, "finaldiagnosis") ? rs.getString("finaldiagnosis") : null);
+        result.setMedicine(rs.getString("medicine"));
+        result.setOperations(rs.getString("operations"));
+        result.setDoctorName(rs.getString("doctorname"));
+        result.setPatientId(Patient.newBuilder().setId(rs.getLong("patientid")).build());
+        result.setDateCreate(rs.getTimestamp("datecreate").toLocalDateTime());
+        result.setDateDischarge(isThere(rs, "datedischarge") ? rs.getTimestamp("datedischarge").toLocalDateTime() : null);
+
         return result;
     }
 
@@ -84,6 +101,11 @@ public class UtilityDao {
 
     static Patient makeUniquePatient(
             Map<Long, Patient> patients, Patient patient) {
+        patients.putIfAbsent(patient.getId(), patient);
+        return patients.get(patient.getId());
+    }
+    static HospitalList makeUniqueHospitalList(
+            Map<Long, HospitalList> patients, HospitalList patient) {
         patients.putIfAbsent(patient.getId(), patient);
         return patients.get(patient.getId());
     }
