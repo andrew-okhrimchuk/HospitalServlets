@@ -62,7 +62,7 @@ public class EditPatientServlet extends HttpServlet {
         try {
             patient = patientService.getPatientById(Long.parseLong(request.getParameter("id"))).get();
             log.info("PatientDTO " + patient);
-            doctorDTO = doctorService.getAllDoctorDTO(selectDTO);
+            doctorDTO = doctorService.findAllWithCount();
             log.info("Find doctorDTO count = " + doctorDTO.size());
         } catch (ServiceExeption e) {
             log.info(e.getMessage());

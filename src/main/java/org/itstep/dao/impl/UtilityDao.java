@@ -28,7 +28,7 @@ public class UtilityDao {
     static Patient extractFromResultSetPatient(ResultSet rs)
             throws SQLException {
         Patient result = new Patient();
-        Doctor doctor = extractFromResultSetDoctor(rs);
+        Doctor doctor = Doctor.newBuilder().setId(rs.getLong("doctor_id")).build();
 
         result.setid(rs.getLong("id"));
         result.setusername(rs.getString("username"));

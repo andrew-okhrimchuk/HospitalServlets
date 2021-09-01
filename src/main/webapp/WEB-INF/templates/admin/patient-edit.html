@@ -66,7 +66,7 @@
                                     <label>
                                         <select th:field="*{doctorDTO}" th:name="doctor">
                                         <option th:each="doctor : ${doctorDTO}"
-                                                th:selected="(${doctor} == *{doctorDTO})"
+                                                th:selected="(${doctor} == ${{doctorDTO}})"
                                                 th:value="${doctor.id}"
                                                 th:text="${doctor.username + ', Count Of Patients - ' + doctor.countOfPatients }"
                                                 >
