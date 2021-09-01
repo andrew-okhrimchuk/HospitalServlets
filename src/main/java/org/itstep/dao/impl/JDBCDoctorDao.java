@@ -157,24 +157,26 @@ public class JDBCDoctorDao implements DoctorDao {
     @Override
     public List<Doctor> findAll(SelectDTO select) throws DaoExeption {
         log.info("Start findAll by SelectDTO " + select);
-        //TODO переписать  SQL
-
         List<Doctor> resultList = new ArrayList<>();
         Map<Long, Doctor> patients = new HashMap<>();
-        //   String SQL = "select * from users as u join doctor as d on d.id = u.id join user_role as ur on u.id = ur.user_id where ur.authorities = 'Doctor' order by 'username'";
-        String SQL = "select u.username, p.doctor_id,  d.id, count( p.doctor_id) as zz \n" +
-                "from doctor d join users u on u.id = d.id\n" +
-                "              left join patient p on d.id = p.doctor_id\n" +
-                "group by p.doctor_id, u.username, d.id";
-
+        String SQL;
+       if (select.getSpeciality()==null || select.getSpeciality().equals("ALL")){
+            SQL = "select * from users as u join doctor as d on d.id = u.id join user_role as ur on u.id = ur.id left join speciality as sp on sp.user_id=u.id where ur.authorities = 'DOCTOR' order by u.username";
+       } else {
+            SQL = "select * from users as u join doctor as d on d.id = u.id join user_role as ur on u.id = ur.id left join speciality as sp on sp.user_id=u.id where ur.authorities = 'DOCTOR' and sp.speciality = ? order by u.username";
+       }
         try (PreparedStatement ps = connection.prepareStatement(SQL)) {
+            if (select.getSpeciality()!=null && !select.getSpeciality().equals("ALL")) {
+                ps.setString(1, select.getSpeciality());
+            }
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Doctor doctor = extractFromResultSetDoctor(rs);
                 doctor = makeUniqueDoctor(patients, doctor);
                 resultList.add(doctor);
             }
-            log.info("find Patients count = " + resultList.size());
+            log.info("findAll Doctor count = " + resultList.size());
+            log.info("findAll Doctors = " + resultList);
 
         } catch (Exception e) {
             throw new DaoExeption(e.getMessage(), e);
@@ -183,8 +185,8 @@ public class JDBCDoctorDao implements DoctorDao {
     }
 
     @Override
-    public List<Doctor> findAllWithCount(SelectDTO select) throws DaoExeption {
-        log.info("Start findAllWithCount by SelectDTO " + select);
+    public List<Doctor> findAllWithCount() throws DaoExeption {
+        log.info("Start findAllWithCount " );
 
         List<Doctor> resultList = new ArrayList<>();
         Map<Long, Doctor> patients = new HashMap<>();

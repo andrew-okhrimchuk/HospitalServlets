@@ -160,5 +160,21 @@ public class SelectDTO {
             return SelectDTO.this;
         }
     }
+
+    @Override
+    public String toString() {
+        return "SelectDTO{" +
+                "isSortByDateOfBirth=" + isSortByDateOfBirth +
+                ", isShowAllCurrentPatients=" + isShowAllCurrentPatients +
+                ", userNameDoctor='" + userNameDoctor + '\'' +
+                ", authorities=" + authorities +
+                ", patient=" + patient +
+                ", doctors=" + doctors +
+                ", specialities=" + specialities +
+                ", speciality='" + speciality + '\'' +
+                ", currentPage=" + currentPage +
+                ", pageSize=" + pageSize +
+                '}';
+    }
 }
 

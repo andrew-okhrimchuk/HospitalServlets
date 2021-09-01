@@ -48,9 +48,13 @@ public class CurrentDoctorsServlet extends HttpServlet {
         if (request.getParameter("size") != null){
             pageSize = Integer.parseInt(request.getParameter("size"));
         }
+
+        if (request.getParameter("special") != null){
+            selectDTO.setSpeciality(request.getParameter("special"));
+        }
         DoctorService doctorService = new DoctorService();
         try {
-            List<DoctorDTO> doctors = doctorService.getAll();
+            List<DoctorDTO> doctors = doctorService.getAllDoctorDTO(selectDTO);
             List speciality = Speciality.getAllSpeciality();
             speciality.remove("All");
             log.info("Find Doctor count = " + doctors);

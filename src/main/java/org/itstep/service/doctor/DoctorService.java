@@ -20,13 +20,29 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public List<Doctor> getAll(SelectDTO selectDTO) throws ServiceExeption {
-        log.info("Start getListPatients of SelectDTO");
+        log.info("Start getAll of SelectDTO");
         DaoFactory factory = DaoFactory.getInstance();
         DoctorDao dao = factory.createDoctorDao();
         try {
-            return dao.findAllWithCount(selectDTO);
+            return dao.findAll(selectDTO);
         } catch (DaoExeption e) {
-            log.info("getListPatients " + e.getMessage());
+            log.info("getAll " + e.getMessage());
+            throw new ServiceExeption(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<DoctorDTO> findAllWithCount() throws ServiceExeption {
+        log.info("Start findAllWithCount");
+        DaoFactory factory = DaoFactory.getInstance();
+        DoctorDao dao = factory.createDoctorDao();
+        try {
+            return dao.findAllWithCount()
+                    .stream()
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
+        } catch (DaoExeption e) {
+            log.info("findAllWithCount " + e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
         }
     }
@@ -157,6 +173,7 @@ public class DoctorService implements IDoctorService {
                 .setUsername(doctor.getUsername())
                 .setPassword(doctor.getPassword())
                 .setSpeciality(doctor.getSpeciality())
+                .setCountOfPatients(doctor.getCountOfPatients())
                 .build();
     }
 }

@@ -53,7 +53,7 @@ public class AddPatientServlet extends HttpServlet {
         List<DoctorDTO> doctorDTO = new ArrayList<>();
         try {
             List<Patient> patients = patientService.getAll(selectDTO);
-            doctorDTO = doctorService.getAllDoctorDTO(selectDTO);
+            doctorDTO = doctorService.findAllWithCount();
             log.info("Find Patients count = " + patients);
             selectDTO.setPatient(patients);
             selectDTO.setCurrentPage(currentPage);
