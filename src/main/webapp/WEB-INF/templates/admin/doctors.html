@@ -30,9 +30,9 @@
                     <div><b>
                         <input type="submit" th:value="${login.getString('listRefresh')}" name="submit" style="float:left">
 
-                        <select th:field="*{SelectDTO.specialities}" style="float:right" th:name="special">
+                        <select th:field="*{SelectDTO.speciality}" style="float:right" th:name="special">
                         <option th:each="special : ${SelectDTO.specialities}"
-                                th:selected="(${special} == *{SelectDTO.specialities})"
+                                th:selected="(${special} == *{SelectDTO.speciality})"
                                 th:value="${special}"
                                 th:text="${special}">
                         </option>
