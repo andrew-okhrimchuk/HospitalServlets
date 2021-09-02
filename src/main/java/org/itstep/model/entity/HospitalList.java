@@ -2,6 +2,7 @@ package org.itstep.model.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class HospitalList {
     private Long id;
@@ -117,5 +118,22 @@ public class HospitalList {
                 operations != null && !operations.isEmpty() &&
                 dateCreate != null && patientId != null &&
                 doctorName != null && !doctorName.isEmpty();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HospitalList that = (HospitalList) o;
+        return primaryDiagnosis.equals(that.primaryDiagnosis) &&
+                medicine.equals(that.medicine) &&
+                operations.equals(that.operations) &&
+                doctorName.equals(that.doctorName) &&
+                dateCreate.equals(that.dateCreate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(primaryDiagnosis, medicine, operations, doctorName, dateCreate);
     }
 }

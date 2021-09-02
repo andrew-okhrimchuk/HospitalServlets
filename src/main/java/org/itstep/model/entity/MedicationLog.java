@@ -1,6 +1,7 @@
 package org.itstep.model.entity;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class MedicationLog {
     private Long id;
@@ -89,5 +90,21 @@ public class MedicationLog {
     public boolean isValidDone() {
         return  executor != null && !executor.isEmpty() &&
                 dateEnd != null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MedicationLog that = (MedicationLog) o;
+        return hospitallistid.equals(that.hospitallistid) &&
+                description.equals(that.description) &&
+                Objects.equals(doctorName, that.doctorName) &&
+                dateCreate.equals(that.dateCreate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hospitallistid, description, doctorName, dateCreate);
     }
 }

@@ -34,4 +34,5 @@ public class Nurse extends User {
                 ", patients=" + patients +
                 '}';
     }
+
 }
