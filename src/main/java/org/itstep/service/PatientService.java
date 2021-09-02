@@ -176,8 +176,9 @@ public class PatientService implements IPatientService {
     }
 
     public Patient convertToEntity(PatientDTO patientDTO) throws DateTimeParseException {
-        return Patient.newBuilder()
-                .setId(patientDTO.getId() !=null ? Long.parseLong(patientDTO.getId()) : null)
+        log.info("Start convertToEntity of User. patientDTO = " + patientDTO + isaNull(patientDTO));
+
+        Patient patient = Patient.newBuilder()
                 .setPassword(patientDTO.getPassword())
                 .setUsername(patientDTO.getUsername())
                 .setRole(Role.PATIENT)
@@ -185,5 +186,13 @@ public class PatientService implements IPatientService {
                 .setIscurrentpatient(patientDTO.getActualPatient())
                 .setBirthDate(LocalDate.parse(patientDTO.getBirthDate(), df))
                 .build();
+        if(isaNull(patientDTO)){
+            patient.setid(Long.parseLong(patientDTO.getId()));
+        }
+        return  patient;
+    }
+
+    private boolean isaNull(PatientDTO patientDTO) {
+        return patientDTO.getId() != null && !patientDTO.getId().equals("") && !patientDTO.getId().equals("null");
     }
 }
