@@ -73,6 +73,7 @@ public class JDBCHospitalListDao implements HospitalListDao, AutoCloseable {
             statement.setString(1, entity.getPrimaryDiagnosis());
             statement.setString(2, entity.getMedicine());
             statement.setString(3, entity.getOperations());
+            statement.setLong(4, entity.getId());
             statement.executeUpdate();
 
             connection.close();

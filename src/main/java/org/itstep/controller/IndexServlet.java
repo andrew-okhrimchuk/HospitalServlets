@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.itstep.config.TemplateEngineUtil;
-import org.itstep.dao.DaoFactory;
-import org.itstep.dao.UserDao;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -29,5 +27,4 @@ public class IndexServlet extends HttpServlet {
         context.setVariable("login", resource);
         engine.process("index.html", context, response.getWriter());
     }
-
 }

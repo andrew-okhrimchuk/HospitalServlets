@@ -144,7 +144,7 @@ public class JDBCPatientDao implements PatientDao, AutoCloseable {
     @Override
     public void update(Patient entity) throws DaoExeption {
         String SQLUser = "UPDATE users as u SET username=?, password=? WHERE u.id=?";
-        String SQLPatient = "UPDATE patient as p SET  iscurrentpatient=?, birthdate=?, doctor_id=?";
+        String SQLPatient = "UPDATE patient as p SET  iscurrentpatient=?, birthdate=?, doctor_id=?  WHERE p.id=?";
 
         try (PreparedStatement psUser = connection.prepareStatement(SQLUser, Statement.RETURN_GENERATED_KEYS);
              PreparedStatement psPatient = connection.prepareStatement(SQLPatient, Statement.RETURN_GENERATED_KEYS)
@@ -158,6 +158,7 @@ public class JDBCPatientDao implements PatientDao, AutoCloseable {
             psPatient.setBoolean(1, entity.isIscurrentpatient());
             psPatient.setDate(2, Date.valueOf(entity.getBirthDate()));
             psPatient.setLong(3, entity.getDoctor().getId());
+            psPatient.setLong(4, entity.getId());
             psPatient.executeUpdate();
 
             connection.commit();
@@ -198,6 +199,32 @@ public class JDBCPatientDao implements PatientDao, AutoCloseable {
         try (PreparedStatement ps = connection.prepareStatement(SQL)) {
             ps.setBoolean(1, select.getShowAllCurrentPatients());
             ps.setString(2, select.getSortByDateOfBirth() ? "birthDate" : "username");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Patient patient = extractFromResultSetPatient(rs);
+                patient = makeUniquePatient(patients, patient);
+                resultList.add(patient);
+            }
+            log.info("find Patients count = " + resultList.size());
+
+        } catch (Exception e) {
+            throw new DaoExeption(e.getMessage(), e);
+        }
+        return resultList;
+    }
+
+    @Override
+    public List<Patient> findAllByDoctorName(SelectDTO select) throws DaoExeption {
+        log.info("Start findAll by SelectDTO " + select);
+
+        List<Patient> resultList = new ArrayList<>();
+        Map<Long, Patient> patients = new HashMap<>();
+        String SQL = "select * from users as u join patient as p on p.id = u.id join user_role as ur on u.id=ur.id left join doctor as d on d.id = p.doctor_id where d.id= (select d.id from users as u join doctor as d on u.id=d.id where u.username= ?)  order by ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(SQL)) {
+            ps.setString(1, select.getUserNameDoctor());
+            ps.setString(2, select.getSortByDateOfBirth() ? "birthDate" : "username");
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Patient patient = extractFromResultSetPatient(rs);

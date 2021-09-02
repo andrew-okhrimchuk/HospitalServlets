@@ -31,6 +31,9 @@ public class PatientService implements IPatientService {
         DaoFactory factory = DaoFactory.getInstance();
         PatientDao dao = factory.createPatientDao();
         try {
+            if (selectDTO.getUserNameDoctor() !=null) {
+                return dao.findAllByDoctorName(selectDTO);
+            }
             return dao.findAll(selectDTO);
         } catch (DaoExeption e) {
             log.info("getListPatients " + e.getMessage());
