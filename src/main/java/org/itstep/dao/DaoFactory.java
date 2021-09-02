@@ -8,8 +8,10 @@ public abstract class DaoFactory {
 
     public abstract PatientDao createPatientDao();
     public abstract DoctorDao createDoctorDao();
+    public abstract MedicationLogDao createMedicationLogDao();
     public abstract UserDao createUserDao();
     public abstract HospitalListDao createHospitalListDao();
+    public abstract NurseDao createNurseDao();
 
     public static DaoFactory getInstance(){
         if( daoFactory == null ){

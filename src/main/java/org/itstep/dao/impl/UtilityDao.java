@@ -1,9 +1,6 @@
 package org.itstep.dao.impl;
 
-import org.itstep.model.entity.Doctor;
-import org.itstep.model.entity.HospitalList;
-import org.itstep.model.entity.Patient;
-import org.itstep.model.entity.User;
+import org.itstep.model.entity.*;
 import org.itstep.model.entity.enums.Role;
 
 import java.sql.ResultSet;
@@ -67,6 +64,21 @@ public class UtilityDao {
         return result;
     }
 
+    static MedicationLog extractFromResultSeMedicationLog(ResultSet rs)
+            throws SQLException {
+
+        MedicationLog result = new MedicationLog();
+        result.setId(rs.getLong("id"));
+        result.setHospitallistid(rs.getLong("hospitallistid"));
+        result.setDescription(rs.getString("description"));
+        result.setExecutor(isThere(rs, "executor") ? rs.getString("executor") : null);
+        result.setDoctorName(rs.getString("doctorname"));
+        result.setDateCreate(rs.getTimestamp("datecreate").toLocalDateTime());
+        result.setDateEnd(isThere(rs, "dateend") ? rs.getTimestamp("dateend").toLocalDateTime() : null);
+        log.info("result = " + result);
+        return result;
+    }
+
     static Doctor extractFromResultSetDoctor(ResultSet rs) throws SQLException {
         return Doctor.newBuilder()
                 .setId(rs.getLong("id"))
@@ -74,6 +86,18 @@ public class UtilityDao {
                 .setSpeciality(isThere(rs, "speciality") ? rs.getString("speciality") : null)
                 .build();
     }
+
+    static Nurse extractFromResultSetNurse(ResultSet rs)
+            throws SQLException {
+        Nurse result = new Nurse();
+
+        result.setid(rs.getLong("id"));
+        result.setusername(rs.getString("username"));
+        result.setpassword(rs.getString("password"));
+        result.setrole(Role.valueOf(rs.getString("authorities").trim().toUpperCase()));
+        return result;
+    }
+
     private static boolean isThere(ResultSet rs, String column)
     {
         try
@@ -106,6 +130,17 @@ public class UtilityDao {
     }
     static HospitalList makeUniqueHospitalList(
             Map<Long, HospitalList> patients, HospitalList patient) {
+        patients.putIfAbsent(patient.getId(), patient);
+        return patients.get(patient.getId());
+    }
+    static MedicationLog makeUniqueMedicationLog(
+            Map<Long, MedicationLog> patients, MedicationLog patient) {
+        patients.putIfAbsent(patient.getId(), patient);
+        return patients.get(patient.getId());
+    }
+
+    static Nurse makeUniqueNurse(
+            Map<Long, Nurse> patients, Nurse patient) {
         patients.putIfAbsent(patient.getId(), patient);
         return patients.get(patient.getId());
     }

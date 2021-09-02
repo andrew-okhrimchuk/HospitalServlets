@@ -16,137 +16,106 @@
 <body>
 <div style="text-align: center;">
     <button type="button" class="btn btn-light"><a th:text="${login.getString('onMain')}" th:href="@{/}" }></a></button>
-    <button type="button" class="btn btn-light"><a href="/doctor/patients" th:text="${login.getString('listPatients')}"></a></a></button>
+    <button type="button" class="btn btn-light"><a href="/doctor/patients"
+                                                   th:text="${login.getString('listPatients')}"></a></a></button>
     <button type="button" class="btn btn-light"><a href="/logout" th:text="${login.getString('logout')}"></a></button>
 
-<div class="container">
+    <div class="container">
 
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <div class="panel panel-default" style="margin-top:45px">
-                <div class="panel-heading">
-                    <h3 class="panel-title" th:text="${login.getString('hospitalCard')}"></h3>
-                </div>
-                <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-default" style="margin-top:45px">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" th:text="${login.getString('hospitalCard')}"></h3>
+                    </div>
+                    <div class="panel-body">
 
-                    <form th:action="@{/doctor/hospital-list/edit}"
-                          method="POST">
+                        <form th:action="@{/doctor/hospital-list/edit}"
+                              method="POST">
 
-                        <table class="table" border="0">
-                            <tr style="display:none;">
-                                <td></td>
-                                <td></td>
-                                <td><input type="hidden" th:value="*{user_id}" name="user_id"/></td>
-                            </tr>
-                            <tr style="display:none;">
-                                <td></td>
-                                <td></td>
-                                <td><input type="hidden" th:value="*{selectDTO.hospitalList.id}" name="id"/></td>
-                            </tr>
-                            <tr style="display:none;">
-                                <td></td>
-                                <td></td>
-                                <td><input type="hidden" th:value="*{selectDTO.hospitalList.dateCreate}" name="dateCreate"/></td>
-                            </tr>
-                            <tr>
-                                <td th:text="${login.getString('primaryDiagnosis')}"></td>
-                                <td>:</td>
-                                <td><input type="text" th:value="*{selectDTO.hospitalList.primaryDiagnosis}" name="primaryDiagnosis"/></td>
+                            <table class="table" border="0">
+                                <tr style="display:none;">
+                                    <td></td>
+                                    <td></td>
+                                    <td><input type="hidden" th:value="*{user_id}" name="user_id"/></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td></td>
+                                    <td></td>
+                                    <td><input type="hidden" th:value="*{selectDTO.hospitalList.id}" name="id"/></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td></td>
+                                    <td></td>
+                                    <td><input type="hidden" th:value="*{selectDTO.hospitalList.dateCreate}"
+                                               name="dateCreate"/></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="${login.getString('primaryDiagnosis')}"></td>
+                                    <td>:</td>
+                                    <td><input type="text" th:value="*{selectDTO.hospitalList.primaryDiagnosis}"
+                                               name="primaryDiagnosis"/></td>
 
-                            </tr>
-                            <tr style="display:none;">
-                                <td></td>
-                                <td></td>
-                                <td><input type="hidden" th:value="*{selectDTO.hospitalList.finalDiagnosis}" name="finalDiagnosis"/></td>
-                            </tr>
-                            <tr>
-                                <td th:text="${login.getString('medicine')}"></td>
-                                <td>:</td>
-                                <td><input type="text" th:value="*{selectDTO.hospitalList.medicine}" name="medicine"/></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td></td>
+                                    <td></td>
+                                    <td><input type="hidden" th:value="*{selectDTO.hospitalList.finalDiagnosis}"
+                                               name="finalDiagnosis"/></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="${login.getString('medicine')}"></td>
+                                    <td>:</td>
+                                    <td><input type="text" th:value="*{selectDTO.hospitalList.medicine}"
+                                               name="medicine"/></td>
 
-                            </tr>
-                            <tr>
-                                <td th:text="${login.getString('operations')}"></td>
-                                <td>:</td>
-                                <td><input type="text" th:value="*{selectDTO.hospitalList.operations}" name="operations"/></td>
+                                </tr>
+                                <tr>
+                                    <td th:text="${login.getString('operations')}"></td>
+                                    <td>:</td>
+                                    <td><input type="text" th:value="*{selectDTO.hospitalList.operations}"
+                                               name="operations"/></td>
 
-                            </tr>
-                        </table>
+                                </tr>
+                            </table>
+                            <div>
+                                <input type="submit" class="btn btn-success" th:value="${login.getString('save')}"/>
+                                <button type="button" class="btn btn-light"><a th:text="${login.getString('cancel')}"
+                                                                               th:href="@{/doctor/patients}" }></a>
+                                </button>
+                            </div>
+                        </form>
                         <div>
-                            <input type="submit" class="btn btn-success" th:value="${login.getString('save')}" />
-                            <button type="button" class="btn btn-light"><a th:text="${login.getString('cancel')}"
-                                                                           th:href="@{/doctor/patients}" }></a>
+                            <button type="button" class="btn btn-light"><a
+                                    th:text="${login.getString('appointNurse')}"
+                                    th:href="@{/doctor/{path}(path=${selectDTO.hospitalList.id == null ? 'hospital-list/edit' :  'nurse'}, user_id = ${user_id}, hospitallistid = ${selectDTO.hospitalList.id})}">
+                            </a></button>
+                            <button type="button" class="btn btn-light">
+                                <a
+                                        th:text="${login.getString('medicationLog')}"}
+                                        th:href="@{/doctor/{path}(path=${selectDTO.hospitalList.id == null ? 'hospital-list/edit' :  'medicationLog'},user_id = ${user_id}, hospitallistid = ${selectDTO.hospitalList.id})}">
+                                </a>
                             </button>
+                            <button type="button" class="btn btn-light">
+                                <a
+                                        th:text="${login.getString('activityLog')}" href="#"
+                                        }>
+                                </a>
+
+                                <button type="button" class="btn btn-light"><a
+                                        th:text="${login.getString('discharge')}"
+                                        th:href="@{/doctor/{path}(path=${selectDTO.hospitalList.id == null ? 'hospital-list/edit' :  'discharge'},user_id = ${user_id}, hospitallistid = ${selectDTO.hospitalList.id})}">
+                                </a>
+                                </button>
                         </div>
-                    </form>
-                    <button type="button" class="btn btn-light"><a
-                            th:text="${login.getString('appointNurse')}"
-                            th:href="@{/doctor/{path}(path=${selectDTO.hospitalList.id == null ? 'hospital-list/edit/'+ user_id :  'nurse/' +selectDTO.hospitalList.id + '/' + user_id })}"
-                    </a></button>
-                    <button type="button" class="btn btn-light">
-                        <a
-                                th:onclick="'javascript:rowClicked(\'' + ${selectDTO.hospitalList.id} + '\');'"
-                                th:text="${login.getString('medicationLog')}" }>
-                        </a>
-                    </button>
-                    <button type="button" class="btn btn-light">
-                        <a
-                                th:text="${login.getString('activityLog')}"  href="#"
-                                }>
-                        </a>
-
-                        <button type="button" class="btn btn-light"><a
-                                th:onclick="'javascript:rowClickedDischarge(\'' + ${user_id} + '\');'"
-                                th:text="${login.getString('discharge')}">
-                        </a>
-                        </button>
-
-                </div>
+                    </div>
                 </div>
             </div>
+            <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"></div>
+            <div th:if="${message}" th:utext="${message}" class="information"></div>
         </div>
-    </div>
 
-    <script>
-        function rowClicked(value) {
-            if (isEmpty(value)) {
-                console.log("isEmpty 0" + value)
-                location.href = "/doctor/hospital-list/edit/" + [[${user_id}]];
-            }
-            if (!isEmpty(value)) {
-                console.log("not isEmpty 1" + value)
-                location.href = "/doctor/medicationLog/" + value;
-            }
-        }
-        function rowClickedDischarge(value) {
-            if (isEmpty(value)) {
-                console.log("isEmpty 2 " + value)
-                console.log("[[${user_id}]] = " + [[${user_id}]])
-                location.href = "/doctor/hospital-list/edit/" + [[${user_id}]];
-            }
-            if (!isEmpty(value)) {
-                console.log("not isEmpty 3" + value)
-                location.href = "/doctor/discharge/" + value;
-            }
-        }
-        function rowClickedNurse(value) {
-            if (isEmpty(value)) {
-                console.log("isEmpty 2 " + value)
-                console.log("[[${user_id}]] = " + [[${user_id}]])
-                location.href = "/doctor/hospital-list/edit/" + [[${user_id}]];
-            }
-            if (!isEmpty(value)) {
-                console.log("not isEmpty 3" + value)
-                location.href = "/doctor/discharge/" + value;
-            }
-        }
-        function isEmpty(value) {
-            return (value === null  || value === undefined || value === 0 || value ==='' || value ==='null');
-        }
-    </script>
-    <br/>
-    <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
-</div>
-</div>
+        <br/>
+    </div>
 </body>
 </html>

@@ -73,7 +73,6 @@ public class JDBCDoctorDao implements DoctorDao {
             }
 
             connection.commit();
-            connection.close();
         } catch (Exception e) {
             log.info("Exception create. " + e.getMessage());
             throw new RuntimeException(e);

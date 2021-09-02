@@ -58,9 +58,9 @@ public class AddDoctorServlet extends HttpServlet {
         if (patientDTO.isValid()) {
             try {
                 doctorService.save(patientDTO);
+                context.setVariable("message", "Save OK!");
                 response.setStatus(HttpServletResponse.SC_FOUND);//302
                 response.setHeader("Location", "/admin/doctors");
-                context.setVariable("errorMessage", "Save OK!");
                 return;
             } catch (ServiceExeption e) {
                 context.setVariable("errorMessage", e.getMessage());

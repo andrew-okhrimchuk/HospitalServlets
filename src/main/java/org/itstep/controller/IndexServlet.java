@@ -30,15 +30,4 @@ public class IndexServlet extends HttpServlet {
         engine.process("index.html", context, response.getWriter());
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        DaoFactory factory = DaoFactory.getInstance();
-        UserDao dao = factory.createUserDao();
-
-      /*  User user= dao.findByUsername("Amanta Smit");
-        TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(request.getServletContext());
-        WebContext context = new WebContext(request, response, request.getServletContext());
-        context.setVariable("recipient", user.getUsername());
-        engine.process("login.html", context, response.getWriter());*/
-    }
 }

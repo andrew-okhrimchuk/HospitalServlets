@@ -63,12 +63,8 @@ public class PatientService implements IPatientService {
             patient = convertToEntity(patientDTO);
             dao.update(patient);
         } catch (DaoExeption | DateTimeParseException e) {
-            //     log.info("savePatient {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
-        } /*catch (DataIntegrityViolationException e) {
-            log.error("savePatient {}, {}, {}", env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), patient, e.getMessage());
-            throw new ServiceExeption(env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), e);
-        }*/
+        }
         return Optional.of(patient);
     }
 
@@ -85,69 +81,6 @@ public class PatientService implements IPatientService {
             throw new ServiceExeption(e.getMessage(), e);
         }
     }
-/*
-    public Page<Patient> getAllByNursesIsContaining(SelectDTO selectDTO, Pageable pageable) throws ServiceExeption {
-        log.debug("Start getAllByNursesIsContaining of SelectDTO");
-        try {
-            return patientJPARepository.findAllByNursename(selectDTO.getUserNameDoctor(), pageable);
-        } catch (DaoExeption | DataIntegrityViolationException e) {
-            log.error("getAllByNursesIsContaining {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_PATIENT"), e.getMessage());
-            throw new ServiceExeption(e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public Page<Patient> getAll(Pageable pageable) throws ServiceExeption {
-        log.debug("Start getListPatients");
-        SelectDTO selectDTO =  SelectDTO.builder().authorities(new ArrayList<>(Collections.singletonList(Role.PATIENT))).build();
-        try {
-            return patientJPARepository.findAll(patientSpecification.getUsers(selectDTO), pageable);
-        } catch (DaoExeption | DataIntegrityViolationException e) {
-            log.error("getListPatients {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_PATIENT"), e.getMessage());
-            throw new ServiceExeption(e.getMessage(), e);
-        }
-    }
-
-
-
-
-
-    @Override
-    public Page<Patient> findAllCurrentPatientsByNameDoctor(SelectDTO selectDTO,Pageable pageable) throws ServiceExeption {
-        log.debug("Start findAllCurrentPatientsByNameDoctor of User. selectDTO = {}", selectDTO);
-        try {
-            return patientJPARepository.findAll(patientSpecification.getCurrentPatientsByDoctorName(selectDTO), pageable);
-        } catch (DaoExeption | DataIntegrityViolationException e) {
-            log.error("findAllPatientsByNameDoctor {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_DOCTOR"), e.getMessage());
-            throw new ServiceExeption(e.getMessage(), e);
-        }
-    }
-
-    public PatientNurse addNurseById(String nurseId, String userId) throws ServiceExeption {
-        log.debug("Start addNurseById of User. id = {}", userId);
-        try {
-            return parientNurseJPARepository.save(PatientNurse.builder()
-                    .nurses_id(Long.valueOf(nurseId))
-                    .patients_user_id(Long.valueOf(userId))
-                    .build());
-        } catch (DaoExeption | DataIntegrityViolationException e) {
-            log.error("addNurseById {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_DOCTOR"), e.getMessage());
-            throw new ServiceExeption(e.getMessage(), e);
-        }
-    }
-
-    public int deleteNurseById(String nurseId, String userId) throws ServiceExeption {
-        log.debug("Start deleteNurseById of User. id = {}", nurseId);
-        try {
-            return parientNurseJPARepository.deleteNurse(
-                    Long.valueOf(nurseId), Long.valueOf(userId));
-        } catch (DaoExeption | DataIntegrityViolationException e) {
-            log.error("deleteNurseById {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_DOCTOR"), e.getMessage());
-            throw new ServiceExeption(e.getMessage(), e);
-        }
-    }
-
-*/
 
     public Optional<PatientDTO> convertToDto(Optional<Patient> convertToDto) {
         return convertToDto.map(this::convertToDto);

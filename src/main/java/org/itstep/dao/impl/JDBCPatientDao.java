@@ -6,13 +6,11 @@ import org.itstep.model.dto.SelectDTO;
 import org.itstep.exeption.DaoExeption;
 import org.itstep.model.entity.Patient;
 import org.itstep.model.entity.enums.Role;
-
 import java.sql.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Logger;
-
 import static org.itstep.dao.impl.UtilityDao.*;
 
 
@@ -74,7 +72,6 @@ public class JDBCPatientDao implements PatientDao, AutoCloseable {
             connection.close();
         } catch (Exception e) {
             try {
-                connection.rollback();
                 connection.close();
             } catch (SQLException throwables) {
                 log.info("throwables = " + throwables.getMessage());
@@ -219,10 +216,6 @@ public class JDBCPatientDao implements PatientDao, AutoCloseable {
 
     public void init() {
         if (key) {
-/*
-            DaoFactory factory = DaoFactory.getInstance();
-            DoctorDao dao = factory.createDoctorDao();
-            dao.findById()*/
             Optional<Patient> patient1 = findByUsername("patient");
             log.info("Start isPresent  " + patient1.isPresent());
             if (!patient1.isPresent()) {
@@ -232,7 +225,6 @@ public class JDBCPatientDao implements PatientDao, AutoCloseable {
                         .setIscurrentpatient(true)
                         .setBirthDate(LocalDate.now())
                         .setDoctor(null)
-                        //     .setDoctor(Doctor.newBuilder().build())
                         .setPassword("1")
                         .build();
                 try {

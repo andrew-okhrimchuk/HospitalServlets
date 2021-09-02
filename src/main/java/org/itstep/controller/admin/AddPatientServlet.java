@@ -102,7 +102,7 @@ public class AddPatientServlet extends HttpServlet {
 
     private PatientDTO getPatientDTO(HttpServletRequest request) {
         return PatientDTO.newBuilder()
-                .setActualPatient(request.getParameter("isIscurrentpatient").equals("on"))
+                .setActualPatient(request.getParameter("isIscurrentpatient") !=null && request.getParameter("isIscurrentpatient").equals("on"))
                 .setBirthDate(request.getParameter("dateOfBirth"))
                 .setPassword(request.getParameter("Password"))
                 .setUsername(request.getParameter("Username"))

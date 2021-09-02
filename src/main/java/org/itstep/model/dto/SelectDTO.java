@@ -3,6 +3,7 @@ package org.itstep.model.dto;
 
 import org.itstep.model.entity.Doctor;
 import org.itstep.model.entity.HospitalList;
+import org.itstep.model.entity.MedicationLog;
 import org.itstep.model.entity.Patient;
 import org.itstep.model.entity.enums.Role;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class SelectDTO {
     private List<Role> authorities = new ArrayList<>();
     private List<Patient> patient = new ArrayList<>();
     private List<DoctorDTO> doctors = new ArrayList<>();
+    private List<MedicationLog> medicationLog = new ArrayList<>();
     private List<String> specialities;
     private HospitalList hospitalList;
     private String speciality;
@@ -108,6 +110,14 @@ public class SelectDTO {
 
     public void setHospitalList(HospitalList hospitalList) {
         this.hospitalList = hospitalList;
+    }
+
+    public List<MedicationLog> getMedicationLog() {
+        return medicationLog;
+    }
+
+    public void setMedicationLog(List<MedicationLog> medicationLog) {
+        this.medicationLog = medicationLog;
     }
 
     public static Builder newBuilder() {

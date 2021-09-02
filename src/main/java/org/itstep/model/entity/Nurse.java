@@ -10,4 +10,28 @@ public class Nurse extends User {
     private void resetSyncTime() {
         countOfPatients = String.valueOf(patients.size());
     }
+
+    public String getCountOfPatients() {
+        return countOfPatients;
+    }
+
+    public void setCountOfPatients(String countOfPatients) {
+        this.countOfPatients = countOfPatients;
+    }
+
+    public List<Patient> getPatients() {
+        return patients;
+    }
+
+    public void setPatients(List<Patient> patients) {
+        this.patients = patients;
+    }
+
+    @Override
+    public String toString() {
+        return "Nurse{" +
+                "countOfPatients='" + countOfPatients + '\'' +
+                ", patients=" + patients +
+                '}';
+    }
 }

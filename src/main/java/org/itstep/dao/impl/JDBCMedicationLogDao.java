@@ -1,45 +1,40 @@
 package org.itstep.dao.impl;
 
-import javassist.NotFoundException;
 import org.itstep.dao.HospitalListDao;
-import org.itstep.dao.PatientDao;
+import org.itstep.dao.MedicationLogDao;
 import org.itstep.exeption.DaoExeption;
-import org.itstep.model.dto.SelectDTO;
 import org.itstep.model.entity.HospitalList;
+import org.itstep.model.entity.MedicationLog;
 import org.itstep.model.entity.Patient;
-import org.itstep.model.entity.enums.Role;
 
-import java.sql.Date;
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Logger;
 
 import static org.itstep.dao.impl.UtilityDao.*;
+import static org.itstep.dao.impl.UtilityDao.makeUniquePatient;
 
 
-public class JDBCHospitalListDao implements HospitalListDao, AutoCloseable {
+public class JDBCMedicationLogDao implements MedicationLogDao, AutoCloseable {
     private Connection connection;
-    Logger log = Logger.getLogger(JDBCHospitalListDao.class.getName());
+    Logger log = Logger.getLogger(JDBCMedicationLogDao.class.getName());
 
-    public JDBCHospitalListDao(Connection connection) {
+    public JDBCMedicationLogDao(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public void create(HospitalList entity) throws DaoExeption {
-        String SQLHospitalList = "insert into hospitallist (primarydiagnosis, medicine, operations, doctorname, patientid, datecreate) values (?,?,?,?,?,?)";
+    public void create(MedicationLog entity) throws DaoExeption {
+        String SQLHospitalList = "insert into medicationlog (hospitallistid, description, doctorname, datecreate) values (?,?,?,?)";
 
-        try (PreparedStatement psHospitalList = connection.prepareStatement(SQLHospitalList, Statement.RETURN_GENERATED_KEYS);
+        try (PreparedStatement statement = connection.prepareStatement(SQLHospitalList, Statement.RETURN_GENERATED_KEYS);
         ) {
-            psHospitalList.setString(1, entity.getPrimaryDiagnosis());
-            psHospitalList.setString(2, entity.getMedicine());
-            psHospitalList.setString(3, entity.getOperations());
-            psHospitalList.setString(4, entity.getDoctorName());
-            psHospitalList.setLong(5, entity.getPatientId().getId());
-            psHospitalList.setTimestamp(6, Timestamp.valueOf(entity.getDateCreate()));
+            statement.setLong(1, entity.getHospitallistid());
+            statement.setString(2, entity.getDescription());
+            statement.setString(3, entity.getDoctorName());
+            statement.setTimestamp(4, Timestamp.valueOf(entity.getDateCreate()));
 
-            psHospitalList.executeUpdate();
+            statement.executeUpdate();
         } catch (Exception e) {
             try {
                 connection.close();
@@ -53,26 +48,26 @@ public class JDBCHospitalListDao implements HospitalListDao, AutoCloseable {
     }
 
     @Override
-    public Optional<HospitalList> findById(long id) throws DaoExeption {
+    public Optional<MedicationLog> findById(long id) throws DaoExeption {
         return null;
     }
 
     @Override
-    public List<HospitalList> findAll() {
+    public List<MedicationLog> findAll() {
         return null;
     }
 
     @Override
-    public void update(HospitalList entity) throws DaoExeption {
+    public void update(MedicationLog entity) throws DaoExeption {
         log.info("Start update  " + entity);
 
-        String SQLhl = "UPDATE hospitallist as h SET primarydiagnosis=?, medicine=?, operations=? WHERE h.id=?";
+        String SQLhl = "UPDATE medicationlog as m SET executor=?, dateend=? WHERE m.id=?";
 
         try (PreparedStatement statement = connection.prepareStatement(SQLhl, Statement.RETURN_GENERATED_KEYS);
         ) {
-            statement.setString(1, entity.getPrimaryDiagnosis());
-            statement.setString(2, entity.getMedicine());
-            statement.setString(3, entity.getOperations());
+            statement.setString(1, entity.getExecutor());
+            statement.setTimestamp(2, Timestamp.valueOf(entity.getDateEnd()));
+            statement.setLong(3, entity.getId());
             statement.executeUpdate();
 
             connection.close();
@@ -102,21 +97,23 @@ public class JDBCHospitalListDao implements HospitalListDao, AutoCloseable {
 
 
     @Override
-    public Optional<HospitalList> findByParientIdAndDoctorName(int userId, String doctorName) throws DaoExeption {
-        log.info("Start findAll by userId, doctorName " + userId + doctorName);
+    public List<MedicationLog> findByPatientId(long userId) throws DaoExeption {
+        log.info("Start findByPatientId by userId " + userId);
 
-        Optional<HospitalList> resultList =Optional.empty();
-        String SQL = "select * from hospitallist as h where h.patientid=? and h.doctorname=? and h.datedischarge is null";
+        List<MedicationLog> resultList = new ArrayList<>();
+        Map<Long, MedicationLog> map = new HashMap<>();
+        String SQL = "select * from medicationlog m where m.hospitallistid = (select h.id from hospitallist h where h.datedischarge is null and h.patientId=?) order by m.datecreate desc ";
 
         try (PreparedStatement ps = connection.prepareStatement(SQL)) {
-            ps.setInt(1, userId);
-            ps.setString(2, doctorName);
+            ps.setLong(1, userId);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                resultList = Optional.of(extractFromResultSeHospitalList(rs));
+                MedicationLog medicationLog = extractFromResultSeMedicationLog(rs);
+                medicationLog = makeUniqueMedicationLog(map, medicationLog);
+                resultList.add(medicationLog);
             }
-            log.info("find HospitalList count = " + resultList.isPresent());
+            log.info("find MedicationLog count = " + resultList);
             connection.close();
         } catch (Exception e) {
             try {

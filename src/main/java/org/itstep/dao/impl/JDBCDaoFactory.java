@@ -40,6 +40,8 @@ public class JDBCDaoFactory extends DaoFactory {
     public HospitalListDao createHospitalListDao() {
         return new JDBCHospitalListDao(getConnection());
     }
+    public MedicationLogDao createMedicationLogDao() {return new JDBCMedicationLogDao(getConnection());}
+    public NurseDao createNurseDao() {return new JDBCNurseDao(getConnection()); }
 
     private Connection getConnection() {
         try {

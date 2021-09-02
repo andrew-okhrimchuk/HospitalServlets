@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 @WebServlet("/doctor/hospital-list/edit")
 public class HospitalListServlet extends HttpServlet {
     Logger log = Logger.getLogger(HospitalListServlet.class.getName());
-    private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm");
+    private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -39,7 +39,7 @@ public class HospitalListServlet extends HttpServlet {
 
         int userId = 0;
         try {
-            userId = Integer.parseInt(request.getParameter("id"));
+            userId = Integer.parseInt(request.getParameter("user_id"));
             log.info("Find my userId = " + userId);
 
             Optional<HospitalList> lists = hospitalListService.findByParientIdAndDoctorName(userId, (String) sess.getAttribute("username"));
@@ -71,9 +71,9 @@ public class HospitalListServlet extends HttpServlet {
                 HospitalListService hospitalListService = new HospitalListService();
                 hospitalListService.save(hospitalList);
 
+                context.setVariable("message", "Save OK!");
                 response.setStatus(HttpServletResponse.SC_FOUND);//302
-                response.setHeader("Location", "/doctor/hospital-list/edit?id=" + request.getParameter("user_id"));
-                context.setVariable("errorMessage", "Save OK!");
+                response.setHeader("Location", "/doctor/hospital-list/edit?user_id=" + request.getParameter("user_id"));
                 return;
             } catch (ServiceExeption e) {
                 context.setVariable("errorMessage", e.getMessage());
@@ -82,7 +82,7 @@ public class HospitalListServlet extends HttpServlet {
         }
 
         log.info("hospitalList not valid" + hospitalList);
-        response.sendRedirect("/doctor/hospital-list/edit?id=" + request.getParameter("user_id"));
+        response.sendRedirect("/doctor/hospital-list/edit?user_id=" + request.getParameter("user_id"));
     }
 
     private HospitalList getHospitalList(HttpServletRequest request) {
