@@ -1,15 +1,11 @@
 package org.itstep.controller.admin;
 
 import org.itstep.config.TemplateEngineUtil;
-import org.itstep.dao.DaoFactory;
 import org.itstep.exeption.ServiceExeption;
 import org.itstep.model.dto.DoctorDTO;
-import org.itstep.model.dto.PatientDTO;
 import org.itstep.model.dto.SelectDTO;
-import org.itstep.model.entity.Patient;
 import org.itstep.model.entity.enums.Speciality;
-import org.itstep.service.doctor.DoctorService;
-import org.itstep.service.patient.PatientService;
+import org.itstep.service.DoctorService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -19,8 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -58,16 +52,8 @@ public class AddDoctorServlet extends HttpServlet {
 
         WebContext context = new WebContext(request, response, request.getServletContext());
         DoctorService doctorService = new DoctorService();
-
-        log.info(request.getParameter("Username"));
-        log.info(request.getParameter("Password"));
-        log.info(request.getParameter("special"));
-
-        DoctorDTO patientDTO = DoctorDTO.newBuilder()
-                .setPassword(request.getParameter("Password"))
-                .setUsername(request.getParameter("Username"))
-                .setSpeciality(request.getParameter("special") )
-                .build();
+        logParams(request);
+        DoctorDTO patientDTO = getDoctorDTO(request);
 
         if (patientDTO.isValid()) {
             try {
@@ -82,5 +68,19 @@ public class AddDoctorServlet extends HttpServlet {
             }
         }
         response.sendRedirect("/admin/patients/add");
+    }
+
+    private DoctorDTO getDoctorDTO(HttpServletRequest request) {
+        return DoctorDTO.newBuilder()
+                .setPassword(request.getParameter("Password"))
+                .setUsername(request.getParameter("Username"))
+                .setSpeciality(request.getParameter("special") )
+                .build();
+    }
+
+    private void logParams(HttpServletRequest request) {
+        log.info(request.getParameter("Username"));
+        log.info(request.getParameter("Password"));
+        log.info(request.getParameter("special"));
     }
 }

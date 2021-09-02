@@ -1,4 +1,4 @@
-package org.itstep.service.doctor;
+package org.itstep.service;
 
 import org.itstep.dao.DaoFactory;
 import org.itstep.dao.DoctorDao;

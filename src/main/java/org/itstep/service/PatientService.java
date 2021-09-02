@@ -1,4 +1,4 @@
-package org.itstep.service.patient;
+package org.itstep.service;
 
 import org.itstep.dao.DaoFactory;
 import org.itstep.dao.PatientDao;
@@ -15,7 +15,6 @@ import org.itstep.service.interfaces.IPatientService;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

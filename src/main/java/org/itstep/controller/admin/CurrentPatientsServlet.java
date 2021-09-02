@@ -4,7 +4,7 @@ import org.itstep.config.TemplateEngineUtil;
 import org.itstep.model.dto.SelectDTO;
 import org.itstep.exeption.ServiceExeption;
 import org.itstep.model.entity.Patient;
-import org.itstep.service.patient.PatientService;
+import org.itstep.service.PatientService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 

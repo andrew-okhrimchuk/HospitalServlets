@@ -1,15 +1,11 @@
 package org.itstep.controller.doctor;
 
 import org.itstep.config.TemplateEngineUtil;
-import org.itstep.dao.DaoFactory;
 import org.itstep.exeption.ServiceExeption;
-import org.itstep.model.dto.DoctorDTO;
-import org.itstep.model.dto.PatientDTO;
 import org.itstep.model.dto.SelectDTO;
 import org.itstep.model.entity.HospitalList;
 import org.itstep.model.entity.Patient;
-import org.itstep.service.hospitallist.HospitalListService;
-import org.itstep.service.patient.PatientService;
+import org.itstep.service.HospitalListService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -19,11 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -32,6 +25,7 @@ import java.util.logging.Logger;
 @WebServlet("/doctor/hospital-list/edit")
 public class HospitalListServlet extends HttpServlet {
     Logger log = Logger.getLogger(HospitalListServlet.class.getName());
+    private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm");
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -78,7 +72,7 @@ public class HospitalListServlet extends HttpServlet {
                 hospitalListService.save(hospitalList);
 
                 response.setStatus(HttpServletResponse.SC_FOUND);//302
-                response.setHeader("Location", "/doctor/hospital-list/edit?id="+ request.getParameter("user_id"));
+                response.setHeader("Location", "/doctor/hospital-list/edit?id=" + request.getParameter("user_id"));
                 context.setVariable("errorMessage", "Save OK!");
                 return;
             } catch (ServiceExeption e) {
@@ -86,7 +80,9 @@ public class HospitalListServlet extends HttpServlet {
                 e.printStackTrace();
             }
         }
-        response.sendRedirect("/doctor/hospital-list/edit?id="+ request.getParameter("user_id"));
+
+        log.info("hospitalList not valid" + hospitalList);
+        response.sendRedirect("/doctor/hospital-list/edit?id=" + request.getParameter("user_id"));
     }
 
     private HospitalList getHospitalList(HttpServletRequest request) {
@@ -98,6 +94,7 @@ public class HospitalListServlet extends HttpServlet {
         hospitalList.setFinalDiagnosis(isThere(request, "finalDiagnosis") ? request.getParameter("finalDiagnosis") : null);
         hospitalList.setMedicine(isThere(request, "medicine") ? request.getParameter("medicine") : null);
         hospitalList.setOperations(isThere(request, "operations") ? request.getParameter("operations") : null);
+        hospitalList.setDateCreate(isThere(request, "dateCreate") ? LocalDateTime.parse(request.getParameter("dateCreate"), df) : LocalDateTime.now());
         hospitalList.setDoctorName((String) sess.getAttribute("username"));
         hospitalList.setPatientId(isThere(request, "user_id") ?
                 Patient.newBuilder()

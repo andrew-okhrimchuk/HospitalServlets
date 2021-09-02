@@ -4,7 +4,7 @@ import org.itstep.config.TemplateEngineUtil;
 import org.itstep.model.dto.SelectDTO;
 import org.itstep.exeption.ServiceExeption;
 import org.itstep.model.entity.Patient;
-import org.itstep.service.patient.PatientService;
+import org.itstep.service.PatientService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -64,31 +64,5 @@ public class OldPatientsServlet extends HttpServlet {
         context.setVariable("locale", locale.getLanguage());
         context.setVariable("df", DateTimeFormatter.ofPattern(locale.getLanguage().equalsIgnoreCase("ru") ? "dd-MM-yyyy" : "MM-dd-yyy"));
         engine.process("admin/patients.html", context, response.getWriter());
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-       /* TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(request.getServletContext());
-        WebContext context = new WebContext(request, response, request.getServletContext());
-        DaoFactory factory = DaoFactory.getInstance();
-        UserDao dao = factory.createUserDao();
-        context.removeVariable("error");
-
-        String username = request.getParameter("username");
-        String pass = request.getParameter("password");
-        log.info("username = " + username);
-        log.info("pass = " + pass);
-        Optional<User> user = dao.findByUsername(username);
-        if (user.isPresent() && user.get().getPassword().equals(pass)) {
-            Role role = user.get().getRole();
-            String template = role.toString().toLowerCase() + ".html";
-            context.setVariable("username", user.get().getUsername());
-            log.info("username = " + user.get().getUsername());
-            log.info("role = " + role);
-            log.info("template = " + template);
-            engine.process(template, context, response.getWriter());
-        } else {
-            response.sendRedirect("/login");
-        }*/
     }
 }

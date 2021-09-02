@@ -7,8 +7,8 @@ import org.itstep.model.dto.PatientDTO;
 import org.itstep.model.dto.SelectDTO;
 import org.itstep.exeption.ServiceExeption;
 import org.itstep.model.entity.Patient;
-import org.itstep.service.doctor.DoctorService;
-import org.itstep.service.patient.PatientService;
+import org.itstep.service.DoctorService;
+import org.itstep.service.PatientService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -82,20 +82,8 @@ public class AddPatientServlet extends HttpServlet {
         WebContext context = new WebContext(request, response, request.getServletContext());
         DaoFactory factory = DaoFactory.getInstance();
         PatientService patientService = new PatientService();
-
-        log.info(request.getParameter("Username"));
-        log.info(request.getParameter("dateOfBirth"));
-        log.info(request.getParameter("Password"));
-        log.info(request.getParameter("isIscurrentpatient"));
-        log.info(request.getParameter("doctor"));
-
-        PatientDTO patientDTO = PatientDTO.newBuilder()
-                .setActualPatient(request.getParameter("isIscurrentpatient").equals("on"))
-                .setBirthDate(request.getParameter("dateOfBirth"))
-                .setPassword(request.getParameter("Password"))
-                .setUsername(request.getParameter("Username"))
-                .setDoctorDTO(request.getParameter("doctor") !=null ? DoctorDTO.newBuilder().setId(Long.valueOf(request.getParameter("doctor"))).build() : null)
-                .build();
+        logParams(request);
+        PatientDTO patientDTO = getPatientDTO(request);
 
         if (patientDTO.isValid()) {
             try {
@@ -110,5 +98,23 @@ public class AddPatientServlet extends HttpServlet {
             }
         }
         response.sendRedirect("/admin/patients/add");
+    }
+
+    private PatientDTO getPatientDTO(HttpServletRequest request) {
+        return PatientDTO.newBuilder()
+                .setActualPatient(request.getParameter("isIscurrentpatient").equals("on"))
+                .setBirthDate(request.getParameter("dateOfBirth"))
+                .setPassword(request.getParameter("Password"))
+                .setUsername(request.getParameter("Username"))
+                .setDoctorDTO(request.getParameter("doctor") !=null ? DoctorDTO.newBuilder().setId(Long.valueOf(request.getParameter("doctor"))).build() : null)
+                .build();
+    }
+
+    private void logParams(HttpServletRequest request) {
+        log.info(request.getParameter("Username"));
+        log.info(request.getParameter("dateOfBirth"));
+        log.info(request.getParameter("Password"));
+        log.info(request.getParameter("isIscurrentpatient"));
+        log.info(request.getParameter("doctor"));
     }
 }

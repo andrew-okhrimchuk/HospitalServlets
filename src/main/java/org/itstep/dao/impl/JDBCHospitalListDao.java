@@ -65,6 +65,8 @@ public class JDBCHospitalListDao implements HospitalListDao, AutoCloseable {
 
     @Override
     public void update(HospitalList entity) throws DaoExeption {
+        log.info("Start update  " + entity);
+
         String SQLhl = "UPDATE hospitallist as h SET primarydiagnosis=?, medicine=?, operations=? WHERE h.id=?";
 
         try (PreparedStatement statement = connection.prepareStatement(SQLhl, Statement.RETURN_GENERATED_KEYS);

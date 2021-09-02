@@ -6,9 +6,8 @@ import org.itstep.model.dto.DoctorDTO;
 import org.itstep.model.dto.PatientDTO;
 import org.itstep.model.dto.SelectDTO;
 import org.itstep.exeption.ServiceExeption;
-import org.itstep.model.entity.Patient;
-import org.itstep.service.doctor.DoctorService;
-import org.itstep.service.patient.PatientService;
+import org.itstep.service.DoctorService;
+import org.itstep.service.PatientService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -38,15 +37,6 @@ public class EditPatientServlet extends HttpServlet {
         Locale locale = (Locale) sess.getAttribute("locale");
         SelectDTO selectDTO = SelectDTO.newBuilder().build();
 
-        int currentPage = 1;
-        int pageSize = 15;
-
-        if (request.getParameter("page1") != null) {
-            currentPage = Integer.parseInt(request.getParameter("page1"));
-        }
-        if (request.getParameter("size") != null) {
-            pageSize = Integer.parseInt(request.getParameter("size"));
-        }
         if (request.getParameter("isSortByDateOfBirth") != null) {
             selectDTO.setSortByDateOfBirth(Boolean.valueOf(request.getParameter("isSortByDateOfBirth")));
         }
@@ -88,21 +78,8 @@ public class EditPatientServlet extends HttpServlet {
         WebContext context = new WebContext(request, response, request.getServletContext());
         DaoFactory factory = DaoFactory.getInstance();
         PatientService patientService = new PatientService();
-
-        log.info(request.getParameter("Username"));
-        log.info(request.getParameter("dateOfBirth"));
-        log.info(request.getParameter("Password"));
-        log.info(request.getParameter("isIscurrentpatient"));
-        log.info(request.getParameter("doctor_id"));
-
-        PatientDTO patientDTO = PatientDTO.newBuilder()
-                .setId(request.getParameter("id"))
-                .setActualPatient(request.getParameter("isIscurrentpatient").equals("on"))
-                .setBirthDate(request.getParameter("dateOfBirth"))
-                .setPassword(request.getParameter("Password"))
-                .setUsername(request.getParameter("Username"))
-                .setDoctorDTO(request.getParameter("doctor_id") !=null ? DoctorDTO.newBuilder().setId(Long.valueOf(request.getParameter("doctor_id"))).build() : null)
-                .build();
+        loggedParams(request);
+        PatientDTO patientDTO = getPatientDTO(request);
 
         if (patientDTO.isValid()) {
             try {
@@ -117,5 +94,24 @@ public class EditPatientServlet extends HttpServlet {
             }
         }
         response.sendRedirect("/admin/patients/add");
+    }
+
+    private PatientDTO getPatientDTO(HttpServletRequest request) {
+        return PatientDTO.newBuilder()
+                .setId(request.getParameter("id"))
+                .setActualPatient(request.getParameter("isIscurrentpatient").equals("on"))
+                .setBirthDate(request.getParameter("dateOfBirth"))
+                .setPassword(request.getParameter("Password"))
+                .setUsername(request.getParameter("Username"))
+                .setDoctorDTO(request.getParameter("doctor_id") !=null ? DoctorDTO.newBuilder().setId(Long.valueOf(request.getParameter("doctor_id"))).build() : null)
+                .build();
+    }
+
+    private void loggedParams(HttpServletRequest request) {
+        log.info(request.getParameter("Username"));
+        log.info(request.getParameter("dateOfBirth"));
+        log.info(request.getParameter("Password"));
+        log.info(request.getParameter("isIscurrentpatient"));
+        log.info(request.getParameter("doctor_id"));
     }
 }
