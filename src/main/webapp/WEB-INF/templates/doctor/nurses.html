@@ -45,7 +45,7 @@
                         <td th:text="${item.username}"></td>
                         <td th:text="${item.countOfPatients}"></td>
                         <td>
-                            <a th:href="@{/doctor/nurse/delete(hospitalListId=${hospitallistid}, nurse_id=${item.id}, user_id=${user_id})}"
+                            <a th:href="@{/doctor/nurse/delete(hospitallistid=${hospitallistid}, nurse_id=${item.id}, user_id=${user_id})}"
                             ><span th:text="${login.getString('deleteNurse')}"></span></a>
                         </td>
                     </tr>
@@ -69,7 +69,7 @@
                         <td th:text="${item.username}"></td>
                         <td th:text="${item.countOfPatients}"></td>
                         <td>
-                            <a th:href="@{/doctor/nurse/add(hospitalListId=${hospitallistid}, nurse_id=${item.id}, user_id=${user_id})}"
+                            <a th:href="@{/doctor/nurse/add(hospitallistid=${hospitallistid}, nurse_id=${item.id}, user_id=${user_id})}"
                                ><span th:text="${login.getString('appointNurse')}"></span></a>
                         </td>
                     </tr>

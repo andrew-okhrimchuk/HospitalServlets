@@ -1,10 +1,8 @@
-package org.itstep.controller.doctor;
+package org.itstep.controller.doctor.medicallog;
 
-import org.itstep.config.TemplateEngineUtil;
 import org.itstep.exeption.ServiceExeption;
 import org.itstep.model.entity.MedicationLog;
 import org.itstep.service.MedicationLogService;
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import javax.servlet.annotation.WebServlet;
@@ -14,38 +12,20 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-@WebServlet("/doctor/medicationLog/add")
-public class AddMedicationLogServlet extends HttpServlet {
-    Logger log = Logger.getLogger(AddMedicationLogServlet.class.getName());
+@WebServlet("/doctor/medicationLog/done")
+public class DoneMedicationLogServlet extends HttpServlet {
+    Logger log = Logger.getLogger(DoneMedicationLogServlet.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        log.info("Start AddMedicationLogServlet doGet ");
-        TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(request.getServletContext());
-        WebContext context = new WebContext(request, response, request.getServletContext());
-        HttpSession sess = request.getSession();
-        Locale locale = (Locale) sess.getAttribute("locale");
-
-        ResourceBundle resource = ResourceBundle.getBundle("login", locale);
-        context.setVariable("hospitallistid", request.getParameter("hospitallistid"));
-        context.setVariable("user_id", request.getParameter("user_id"));
-        context.setVariable("login", resource);
-        context.setVariable("locale", locale.getLanguage());
-        engine.process("doctor/medicationLog-add.html", context, response.getWriter());
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        log.info("Start HospitalListServlet doPost");
+        log.info("Start DoneMedicationLogServlet doPost");
         WebContext context = new WebContext(request, response, request.getServletContext());
         logParams(request);
         MedicationLog medicationLog = getMedicationLog(request);
 
-        if (medicationLog.isValidAdd()) {
+        if (medicationLog.isValidDone()) {
             try {
                 MedicationLogService medicationLogService = new MedicationLogService();
                 medicationLogService.save(medicationLog);
@@ -59,7 +39,7 @@ public class AddMedicationLogServlet extends HttpServlet {
                 e.printStackTrace();
             }
         } else log.info("MedicationLog not valid" + medicationLog);
-        response.sendRedirect(getStringBuilderAdd(request).toString());
+        response.sendRedirect(getMedicationLogPath(request).toString());
     }
 
     private StringBuilder getMedicationLogPath(HttpServletRequest request) {
@@ -69,30 +49,19 @@ public class AddMedicationLogServlet extends HttpServlet {
                 .append("&hospitallistid=")
                 .append(request.getParameter("hospitallistid"));
     }
-    private StringBuilder getStringBuilderAdd(HttpServletRequest request) {
-        return new StringBuilder()
-                .append("/doctor/medicationLog/add?user_id=")
-                .append(request.getParameter("user_id"))
-                .append("&hospitallistid=")
-                .append(request.getParameter("hospitallistid"));
-    }
+
 
     private MedicationLog getMedicationLog(HttpServletRequest request) {
         HttpSession sess = request.getSession();
-
         MedicationLog medicationLog = new MedicationLog();
-        medicationLog.setHospitallistid(isThere(request, "hospitallistid") ? Long.valueOf(request.getParameter("hospitallistid")) : null);
-        medicationLog.setDescription(isThere(request, "description") ? request.getParameter("description") : null);
-        medicationLog.setDateCreate( LocalDateTime.now());
-        medicationLog.setDoctorName((String) sess.getAttribute("username"));
-        log.info("getMedicationLog = "+ medicationLog);
+        medicationLog.setId(isThere(request, "medicationlogid") ? Long.valueOf(request.getParameter("medicationlogid")) : null);
+        medicationLog.setDateEnd( LocalDateTime.now());
+        medicationLog.setExecutor((String) sess.getAttribute("username"));
         return medicationLog;
     }
 
     private void logParams(HttpServletRequest request) {
         log.info(request.getParameter("hospitallistid"));
-        log.info(request.getParameter("description"));
-        log.info(request.getParameter("doctorname"));
         log.info(request.getParameter("user_id"));
     }
 

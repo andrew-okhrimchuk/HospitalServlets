@@ -1,12 +1,9 @@
-package org.itstep.controller.doctor;
+package org.itstep.controller.doctor.medicallog;
 
 import org.itstep.config.TemplateEngineUtil;
 import org.itstep.exeption.ServiceExeption;
 import org.itstep.model.dto.SelectDTO;
-import org.itstep.model.entity.HospitalList;
 import org.itstep.model.entity.MedicationLog;
-import org.itstep.model.entity.Patient;
-import org.itstep.service.HospitalListService;
 import org.itstep.service.MedicationLogService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -17,11 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 

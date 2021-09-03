@@ -1,4 +1,4 @@
-package org.itstep.controller.doctor;
+package org.itstep.controller.doctor.nurse;
 
 import org.itstep.config.TemplateEngineUtil;
 import org.itstep.exeption.ServiceExeption;
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -27,7 +26,7 @@ public class NurseServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         log.info("Start NurseServlet doGet ");
-        NurseService medicationLogService = new NurseService();
+        NurseService nurseService = new NurseService();
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(request.getServletContext());
         WebContext context = new WebContext(request, response, request.getServletContext());
         HttpSession sess = request.getSession();
@@ -39,9 +38,9 @@ public class NurseServlet extends HttpServlet {
             userId = Long.parseLong(request.getParameter("user_id"));
             log.info("Find my userId = " + userId);
 
-            myNurses = medicationLogService.findByPatientId(userId);
+            myNurses = nurseService.findByPatientId(userId);
             log.info("Find my Nurse  = " + myNurses);
-            lisrFreeNurses = medicationLogService.findNursesByPatientsIsNotContaining(userId);
+            lisrFreeNurses = nurseService.findNursesByPatientsIsNotContaining(userId);
             log.info("Find lisrFreeNurses = " + lisrFreeNurses);
 
         } catch (ServiceExeption e) {

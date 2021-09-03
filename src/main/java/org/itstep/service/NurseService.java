@@ -57,6 +57,32 @@ public class NurseService implements INurseService {
     }
 
     @Override
+    public boolean addPatientToNurse(long userId, long nurseId) throws ServiceExeption {
+        log.info("Start addPatientToNurse " + userId + nurseId);
+        DaoFactory factory = DaoFactory.getInstance();
+        NurseDao dao = factory.createNurseDao();
+        try {
+            return dao.addPatientToNurse(userId, nurseId);
+        } catch (DaoExeption e) {
+            log.info("addPatientToNurse " + e.getMessage());
+            throw new ServiceExeption(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public boolean deletePatientToNurse(long userId, long nurseId) throws ServiceExeption {
+        log.info("Start deletePatientToNurse " + userId + nurseId);
+        DaoFactory factory = DaoFactory.getInstance();
+        NurseDao dao = factory.createNurseDao();
+        try {
+            return dao.deletePatientToNurse(userId, nurseId);
+        } catch (DaoExeption e) {
+            log.info("deletePatientToNurse " + e.getMessage());
+            throw new ServiceExeption(e.getMessage(), e);
+        }
+    }
+
+    @Override
     public List<Nurse> getAll(SelectDTO selectDTO) throws ServiceExeption {
         return null;
     }

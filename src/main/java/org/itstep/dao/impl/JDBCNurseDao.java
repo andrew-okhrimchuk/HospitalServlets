@@ -146,4 +146,49 @@ public class JDBCNurseDao implements NurseDao, AutoCloseable {
         }
         return resultList;
     }
+
+    @Override
+    public boolean addPatientToNurse(long userId, long nurseId) throws DaoExeption {
+        String SQLHospitalList = "insert into patientnurse (patients_user_id, nurses_id) values (?,?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(SQLHospitalList, Statement.RETURN_GENERATED_KEYS);
+        ) {
+            statement.setLong(1, userId);
+            statement.setLong(2, nurseId);
+            int result = statement.executeUpdate();
+            connection.close();
+            return result > 0;
+        } catch (Exception e) {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                log.info("throwables = " + throwables.getMessage());
+                throwables.printStackTrace();
+            }
+            log.info("Exception = " + e.getMessage());
+            throw new DaoExeption(e.getMessage(), e);
+        }
+    }
+    @Override
+    public boolean deletePatientToNurse(long userId, long nurseId) throws DaoExeption {
+        String SQLHospitalList = "DELETE from patientnurse where patients_user_id=? and nurses_id= ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(SQLHospitalList, Statement.RETURN_GENERATED_KEYS);
+        ) {
+            statement.setLong(1, userId);
+            statement.setLong(2, nurseId);
+            int result = statement.executeUpdate();
+            connection.close();
+            return result > 0;
+        } catch (Exception e) {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                log.info("throwables = " + throwables.getMessage());
+                throwables.printStackTrace();
+            }
+            log.info("Exception = " + e.getMessage());
+            throw new DaoExeption(e.getMessage(), e);
+        }
+    }
 }

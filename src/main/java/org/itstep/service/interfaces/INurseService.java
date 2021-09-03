@@ -12,4 +12,6 @@ public interface INurseService extends GenericService <Nurse, SelectDTO> {
     List<Nurse> findNursesByPatientsIsNotContaining(long patientId) throws ServiceExeption;
 
     List<Nurse> findByPatientId(long patientId) throws ServiceExeption;
+    boolean addPatientToNurse(long userId,long nurseId) throws ServiceExeption;
+    boolean deletePatientToNurse(long userId,long nurseId) throws ServiceExeption;
 }

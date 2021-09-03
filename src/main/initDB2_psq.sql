@@ -92,3 +92,5 @@ CREATE TABLE IF NOT EXISTS PatientNurse
     FOREIGN KEY (patients_user_id) REFERENCES USERS (id),
     FOREIGN KEY (nurses_id) REFERENCES NURSE (id)
 );
+ALTER TABLE PatientNurse
+    ADD CONSTRAINT duble_key UNIQUE(patients_user_id, nurses_id);
