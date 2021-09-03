@@ -239,6 +239,31 @@ public class JDBCPatientDao implements PatientDao, AutoCloseable {
         return resultList;
     }
 
+    @Override
+    public List<Patient> findAllByNurseName(String name) throws DaoExeption {
+        log.info("Start findAllByNurseName " + name);
+
+        List<Patient> resultList = new ArrayList<>();
+        Map<Long, Patient> patients = new HashMap<>();
+        String SQL = "select * from users as u join patient as p on p.id = u.id join user_role as ur on u.id=ur.id  join patientnurse as pn on pn.patients_user_id = u.id where pn.nurses_id = (select u.id from users as u where u.username= ?) ";
+
+        try (PreparedStatement ps = connection.prepareStatement(SQL)) {
+            ps.setString(1, name);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Patient patient = extractFromResultSetPatient(rs);
+                patient = makeUniquePatient(patients, patient);
+                resultList.add(patient);
+            }
+            log.info("find Patients count = " + resultList.size());
+
+        } catch (Exception e) {
+            throw new DaoExeption(e.getMessage(), e);
+        }
+        return resultList;
+    }
+
     private static boolean key = true;
 
     public void init() {

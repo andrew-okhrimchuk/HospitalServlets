@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 public class PatientService implements IPatientService {
     Logger log = Logger.getLogger(PatientService.class.getName());
     private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    //TODO Use try-with-resources or close this "PatientDao" in a "finally" clause.
 
     @Override
     public List<Patient> getAll(SelectDTO selectDTO) throws ServiceExeption {
@@ -81,6 +82,20 @@ public class PatientService implements IPatientService {
             return convertToDto(dao.findById(id));
         } catch (DaoExeption e) {
             log.info("findAllPatientsByNameDoctor " + e.getMessage());
+            throw new ServiceExeption(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Patient> findAllByNurseName(String name) throws ServiceExeption {
+        log.info("Start findAllByNurseName of User. name  " + name);
+        DaoFactory factory = DaoFactory.getInstance();
+        PatientDao dao = factory.createPatientDao();
+        //TODO Use try-with-resources or close this "PatientDao" in a "finally" clause.
+        try {
+            return dao.findAllByNurseName(name);
+        } catch (DaoExeption e) {
+            log.info("findAllByNurseName " + e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
         }
     }

@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 public class HospitalListService implements IHospitalLisService {
     Logger log = Logger.getLogger(HospitalListService.class.getName());
+    //TODO Use try-with-resources or close this "HospitalListService" in a "finally" clause.
 
 
     @Override

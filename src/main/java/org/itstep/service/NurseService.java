@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 public class NurseService implements INurseService {
     Logger log = Logger.getLogger(NurseService.class.getName());
     private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    //TODO Use try-with-resources or close this "NurseService" in a "finally" clause.
 
     @Override
     public List<Nurse> findByUsername(String username) throws ServiceExeption {

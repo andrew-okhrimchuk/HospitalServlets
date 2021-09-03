@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 public class MedicationLogService implements IMedicationLogService {
     Logger log = Logger.getLogger(MedicationLogService.class.getName());
+    //TODO Use try-with-resources or close this "MedicationLog" in a "finally" clause.
 
 
     @Override
